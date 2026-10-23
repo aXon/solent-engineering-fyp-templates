@@ -230,9 +230,11 @@
 
 % ---------------------------------------------------------------------
 % Notation, abbreviations and glossary (entries in glossary-entries.tex)
+% Sorted by LaTeX itself (\makenoidxglossaries): no external tool such as
+% makeglossaries (Perl) or makeindex is needed.
 % ---------------------------------------------------------------------
 \usepackage[acronym, symbols, nonumberlist, nopostdot, nogroupskip]{glossaries}
-\makeglossaries
+\makenoidxglossaries
 
 % ---------------------------------------------------------------------
 % Headings required by the Handbook (Appendix A)
@@ -268,7 +270,14 @@
 \newif\ifwordcountontitle
 \studentname{Student Name}\studentid{00000000}\award{BEng (Hons)}
 \course{Course Name}\projecttitle{Project Title}\supervisor{Supervisor}
-\academicyear{2026--27}\reportdate{\DTMmonthname{\month}\ \the\year}
+% academic year and date follow the date of compilation unless set in
+% main.tex: from September the new academic year (e.g. 2026--27)
+\ifnum\month>8
+  \edef\fyp@year{\the\year--\expandafter\@gobbletwo\the\numexpr\year+1\relax}
+\else
+  \edef\fyp@year{\the\numexpr\year-1\relax--\expandafter\@gobbletwo\the\year}
+\fi
+\reportdate{\solentmonth{\month}\ \the\year}
 \wordtarget{10000}
 
 \AtBeginDocument{\hypersetup{pdftitle={\fyp@title},
@@ -404,9 +413,9 @@
 % Front and back matter helpers
 % =====================================================================
 \newcommand\printnotation{%
-  \printglossary[type=symbols, title=NOTATION, toctitle=Notation]%
-  \printglossary[type=\acronymtype, title=ABBREVIATIONS, toctitle=Abbreviations]%
-  \printglossary[title=GLOSSARY, toctitle=Glossary]}
+  \printnoidxglossary[type=symbols, sort=standard, title=NOTATION, toctitle=Notation]%
+  \printnoidxglossary[type=\acronymtype, sort=letter, title=ABBREVIATIONS, toctitle=Abbreviations]%
+  \printnoidxglossary[sort=letter, title=GLOSSARY, toctitle=Glossary]}
 
 \newcommand\printreferences{%
   \printbibliography[heading=bibintoc, title=References, category=cited]%

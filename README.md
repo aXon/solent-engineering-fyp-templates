@@ -37,17 +37,26 @@ Final Report and onto the poster.
 
 ### On your own computer
 
-Install a TeX distribution (TeX Live, MiKTeX or MacTeX), then in the
-template folder run
+Install a TeX distribution: TeX Live, MiKTeX or MacTeX. The templates only
+need **LuaLaTeX** and **Biber**, which come with all of them. No Perl,
+Python, Java or other tools are needed: the word count is done by LuaLaTeX
+itself, and the glossaries are sorted by LaTeX.
+
+In the template folder, run (or let your editor run)
 
 ```bash
-latexmk                                        # draft
-latexmk -usepretex='\def\reportmode{final}'    # final version for submission
+lualatex main
+biber main
+lualatex main
+lualatex main
 ```
 
-The `latexmkrc` file runs LuaLaTeX, Biber and makeglossaries for you.
-Editors such as TeXstudio, VS Code (LaTeX Workshop) or TeXShop can use it
-too.
+For the final version, set `\reportmode{final}` at the top of `main.tex`.
+If you have `latexmk` (part of TeX Live and MacTeX; on Windows with MiKTeX
+it needs Perl), `latexmk` does all of this in one step using the
+`latexmkrc` in the folder. Editors such as TeXstudio, VS Code (LaTeX
+Workshop) or TeXShop work as well; choose LuaLaTeX and Biber in their
+settings.
 
 ### Logo
 
@@ -63,6 +72,7 @@ the title page and the poster show a placeholder.
 | `\reportmode` | `draft`, `final` | Draft shows guidance boxes, `\todo{}` notes, a DRAFT watermark and the word count. Final removes all of these – use it for submission. |
 | `\fontstyle` | `brand`, `classic` | `brand`: Carlito, a free font with the same metrics as Calibri, the system font of the university brand guidelines. `classic`: Latin Modern, the traditional LaTeX look. |
 | `\course{…}` | four lines | Keep exactly one of the course lines active. |
+| `\academicyear`, `\reportdate` | optional | Set automatically from the date of compilation (from September the new academic year). Uncomment the lines only to fix a different value. |
 | `\posterorientation` | `landscape`, `portrait` | Poster only. |
 
 ## What the templates do for you
