@@ -1,0 +1,40 @@
+\section{Project Methodology}
+\label{sec:methodology}
+
+\begin{guidance}[What this section does -- about 200 words plus the flowchart]
+The approach for the whole project, presented as a flowchart of the flow of
+information across its key stages (Handbook, Phase Two). Briefly justify the
+main methods, tools and techniques. Draw the flowchart with the styles
+\texttt{fyp process}, \texttt{fyp decision}, \texttt{fyp terminal},
+\texttt{fyp io}, \texttt{fyp data}, \texttt{fyp deliverable} and
+\texttt{fyp arrow}.
+\end{guidance}
+
+\Cref{fig:methodology} shows the stages of the project and the information
+passed between them.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[node distance=6mm and 12mm]
+    \node[fyp terminal] (start) {Project proposal};
+    \node[fyp process, below=of start] (lit) {Literature and market survey};
+    \node[fyp deliverable, below=of lit] (spec) {Product design specification};
+    \node[fyp process, below=of spec] (concepts) {Candidate solutions};
+    \node[fyp decision, below=of concepts] (select) {Meets specification?};
+    \node[fyp terminal, right=of select] (pr) {Progress Report (AE1)};
+    \node[fyp process, above=of pr] (build) {Phase Three: implement and test};
+    \node[fyp terminal, above=of build] (final) {Final Report (AE2)};
+    \node[fyp data, left=of lit] (log) {Logbook and project folder};
+    \draw[fyp arrow] (start) -- (lit);
+    \draw[fyp arrow] (lit) -- (spec);
+    \draw[fyp arrow] (spec) -- (concepts);
+    \draw[fyp arrow] (concepts) -- (select);
+    \draw[fyp arrow] (select) -- node[above, font=\scriptsize]{yes} (pr);
+    \draw[fyp arrow] (select.west) -- ++(-6mm,0) |- node[pos=0.25, left, font=\scriptsize]{no} (concepts.west);
+    \draw[fyp arrow] (pr) -- (build);
+    \draw[fyp arrow] (build) -- (final);
+    \draw[fyp arrow, dashed] (log) -- (lit);
+  \end{tikzpicture}
+  \caption{Project methodology and flow of information between stages (example)}
+  \label{fig:methodology}
+\end{figure}

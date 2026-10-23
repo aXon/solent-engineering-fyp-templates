@@ -1,0 +1,14 @@
+\section{Project Plan}
+\label{app:project-plan}
+
+\begin{guidance}
+The full-size Gantt chart, if the chart in \cref{sec:plan} is a summary.
+Appendices do not count towards the 2,000 words, but the marker must be
+able to follow the report without them. To include a chart exported from
+other software (Excel, MS Project) as a landscape page, use for example
+\verb|\includepdf[pages=-, landscape]{evidence/gantt.pdf}|.
+\end{guidance}
+
+\IfFileExists{evidence/gantt.pdf}
+  {\includepdf[pages=-, landscape, scale=0.9]{evidence/gantt.pdf}}
+  {\placeholder{Full Gantt chart: save it as \texttt{evidence/gantt.pdf}}}

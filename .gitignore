@@ -34,3 +34,8 @@ figures/solent-logo.*
 .DS_Store
 .vscode/
 *.swp
+
+# extra build jobs (latexmk -jobname=...)
+final-report-*.pdf
+progress-report-*.pdf
+poster-*.pdf

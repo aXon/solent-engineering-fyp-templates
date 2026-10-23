@@ -1,0 +1,24 @@
+\begin{guidance}
+The project stages as a flowchart: the same diagram as in your report,
+with larger text. The process is assessed as well as the product.
+\end{guidance}
+
+\begin{center}
+\begin{tikzpicture}[node distance=7mm and 7mm,
+    fyp process/.append style={text width=6.5em, font=\small},
+    fyp terminal/.append style={text width=6.5em, font=\small},
+    fyp deliverable/.append style={text width=6.5em, font=\small},
+    fyp decision/.append style={text width=5.5em, font=\small}]
+  \node[fyp terminal] (start) {Proposal};
+  \node[fyp process, right=of start] (lit) {Literature and market survey};
+  \node[fyp deliverable, right=of lit] (spec) {Specification};
+  \node[fyp process, below=of spec] (con) {Three concepts};
+  \node[fyp decision, left=of con] (sel) {Best concept?};
+  \node[fyp process, left=of sel] (build) {Build and test};
+  \draw[fyp arrow] (start) -- (lit);
+  \draw[fyp arrow] (lit) -- (spec);
+  \draw[fyp arrow] (spec) -- (con);
+  \draw[fyp arrow] (con) -- (sel);
+  \draw[fyp arrow] (sel) -- (build);
+\end{tikzpicture}
+\end{center}

@@ -1,24 +1,57 @@
 % =====================================================================
-%  setup/preamble.tex -- packages and layout for the SEF639 Final Report
+%  setup/fyp-common.tex -- shared code of the SEF639 LaTeX templates
 %
-%  You should not need to edit this file. Your own details belong in
-%  main.tex. If you add packages, add them at the end of main.tex's
-%  preamble (before \begin{document}) so that updates to this template
-%  can be copied in without losing your changes.
+%  This file is IDENTICAL in all templates (Progress Report, Final
+%  Report, Poster). Its master copy lives in shared/setup/ in the template
+%  repository; tools/sync-shared.sh copies it into each template.
+%  Do not edit the copies -- edit the master and run the script.
+%
+%  Students: you should not need to edit this file. Your own details
+%  belong in main.tex, your own packages at the end of its preamble.
+%
+%  Loaded by setup/layout.tex, which sets before loading:
+%    \fyp@unit     chapter | section | poster  (unit of the main body)
+%    \fyp@doctype  e.g. Final Report
 % =====================================================================
 \makeatletter
+\providecommand\fyp@unit{chapter}
+\providecommand\fyp@doctype{Report}
+\def\fyp@chapterstr{chapter}
+\def\fyp@posterstr{poster}
+\newif\iffyp@poster
+\newif\iffyp@maxmode     % word count: maximum instead of target
+\newif\iffyp@guidemode   % word count: recommendation only
+\ifx\fyp@unit\fyp@chapterstr
+  \def\fyp@unitname{Chapter}\let\fyp@addunnumbered\addchap
+\else
+  \def\fyp@unitname{Section}\let\fyp@addunnumbered\addsec
+\fi
+\ifx\fyp@unit\fyp@posterstr \fyp@postertrue \def\fyp@unitname{Panel}\fi
 
 % ---------------------------------------------------------------------
 % Draft or final mode (set \reportmode in main.tex)
 % ---------------------------------------------------------------------
 \newif\iffinalmode
-\def\fyp@finalstr{final}
-\ifx\reportmode\fyp@finalstr \finalmodetrue \fi
+\edef\fyp@mode{\reportmode}\edef\fyp@finalstr{final}
+\ifx\fyp@mode\fyp@finalstr \finalmodetrue \fi
 
 % ---------------------------------------------------------------------
 % Language and fonts (LuaLaTeX)
 % ---------------------------------------------------------------------
-\usepackage{fontspec}            % Latin Modern by default; see README
+% \fontstyle (set at the top of main.tex):
+%   brand   -- Carlito, a free font with the same metrics as Calibri, the
+%              system font of the Southampton Solent University brand
+%              guidelines (the brand fonts Bliss and Bilo are licensed)
+%   classic -- Latin Modern, the standard LaTeX look (serif)
+\providecommand\fontstyle{brand}
+\usepackage{fontspec}
+\edef\fyp@font{\fontstyle}\edef\fyp@brandstr{brand}
+\ifx\fyp@font\fyp@brandstr
+  \setmainfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
+    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+  \setsansfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
+    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+\fi
 \usepackage{polyglossia}
 \setdefaultlanguage[variant=british]{english}
 \usepackage[autostyle]{csquotes}
@@ -27,23 +60,37 @@
 % ---------------------------------------------------------------------
 % Page layout
 % ---------------------------------------------------------------------
+\iffyp@poster\else     % the poster sets its own page size
 \usepackage[a4paper, top=25mm, bottom=25mm, left=25mm, right=25mm,
   includehead, includefoot, marginparwidth=20mm, marginparsep=2mm]{geometry}
 \usepackage{setspace}
 \setstretch{1.15}                % slightly more open than single spacing
+\fi
 
 % ---------------------------------------------------------------------
-% Colours (Solent University brand guidelines)
+% Colours: Southampton Solent University brand guidelines (v2.0, 2024)
+% Lead colours are Solent Red and white, with Navy for text and
+% headings. Tints: only 80%, 60% and 40% of a colour (e.g. SkyBlue!40);
+% any tint of black, but not below 10% (black!10) in print.
 % ---------------------------------------------------------------------
 \usepackage[table]{xcolor}
-\definecolor{SolentRed}{RGB}{205,20,35}
-\definecolor{SkyBlue}{RGB}{1,195,222}
-\definecolor{SeaBlue}{RGB}{15,67,95}
-% risk ratings (risk register)
-\definecolor{RiskLow}{RGB}{198,239,206}
-\definecolor{RiskMedium}{RGB}{255,235,156}
-\definecolor{RiskHigh}{RGB}{252,192,140}
-\definecolor{RiskVeryHigh}{RGB}{255,150,150}
+\definecolor{SolentRed}{HTML}{CD1423}
+\definecolor{Navy}{HTML}{1D2136}
+\definecolor{SkyBlue}{HTML}{01C3DE}
+\definecolor{SeaBlue}{HTML}{0F435F}
+\definecolor{Teal}{HTML}{1F988A}
+\definecolor{PetrolBlue}{HTML}{083237}
+\definecolor{Orange}{HTML}{FF4D00}
+\definecolor{Yellow}{HTML}{FFC11B}
+\definecolor{Green}{HTML}{C6C745}
+\definecolor{Purple}{HTML}{9243F4}
+\definecolor{Pink}{HTML}{D82F89}
+\definecolor{Burgundy}{HTML}{531623}
+% risk ratings (risk register): 40% tints of brand colours
+\colorlet{RiskLow}{Green!40}
+\colorlet{RiskMedium}{Yellow!40}
+\colorlet{RiskHigh}{Orange!40}
+\colorlet{RiskVeryHigh}{SolentRed!40}
 
 % ---------------------------------------------------------------------
 % Figures, tables, lists, units, maths, code
@@ -56,7 +103,8 @@
 \usepackage{subcaption}
 \usepackage{amsmath, amssymb}
 \usepackage{siunitx}
-\sisetup{group-separator={,}, group-minimum-digits=4, per-mode=symbol}
+\sisetup{group-separator={,}, group-minimum-digits=4, per-mode=symbol,
+  mode=match}                     % numbers and units in the text font
 \usepackage{listings}
 \usepackage{pdfpages}
 \usepackage[en-GB]{datetime2}
@@ -66,6 +114,11 @@
   shapes.geometric, shapes.misc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+% plot colours: brand palette, high contrast (brand guidelines p. 37)
+\pgfplotscreateplotcyclelist{solent}{
+  {SolentRed, mark=*}, {Navy, mark=square*}, {Teal, mark=triangle*},
+  {Orange, mark=diamond*}, {SkyBlue, mark=pentagon*}}
+\pgfplotsset{every axis/.append style={cycle list name=solent}}
 \usepackage{pgfplotstable}
 \usepackage{pgfgantt}
 \usepackage{tcolorbox}
@@ -74,10 +127,12 @@
 % ---------------------------------------------------------------------
 % Headers and footers: page number bottom centre (Handbook, App. A)
 % ---------------------------------------------------------------------
+\iffyp@poster\else
 \usepackage[headsepline=false]{scrlayer-scrpage}
 \clearpairofpagestyles
 \cfoot*{\pagemark}
 \pagestyle{scrheadings}
+\fi
 
 % ---------------------------------------------------------------------
 % Draft-mode helpers: todo notes, watermark, header stamp
@@ -92,10 +147,11 @@
     \fyp@todo[#1]{#2}\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
   \usepackage{draftwatermark}
   \SetWatermarkText{DRAFT}
-  \SetWatermarkColor[gray]{0.94}
+  \SetWatermarkColor[gray]{0.9}
   \SetWatermarkScale{1.2}
-  \ohead*{\scriptsize\textcolor{SolentRed}{\textbf{DRAFT}}\ compiled
-    \DTMnow\ \textbar\ main body: \fyp@lastwords\ words}
+  \iffyp@poster\else\ohead*{\scriptsize\textcolor{SolentRed}{\textbf{DRAFT}}\ compiled
+    \DTMnow\ \textbar\ main body: \fyp@lastwords\ words
+    (\iffyp@maxmode maximum\else target\fi\ \fyp@target)}\fi
 \fi
 
 % ---------------------------------------------------------------------
@@ -185,9 +241,9 @@
   \renewcommand\contentsname{CONTENTS}%
   \renewcommand\listfigurename{FIGURES}%
   \renewcommand\listtablename{TABLES}%
-  \renewcommand\bibname{References}}
-\setkomafont{disposition}{\normalcolor\sffamily\bfseries}
-\addtokomafont{chapter}{\color{SeaBlue}}
+  \renewcommand\bibname{References}%
+  \renewcommand\refname{References}}
+\setkomafont{disposition}{\color{Navy}\sffamily\bfseries}
 
 % =====================================================================
 % Your details (set in main.tex)
@@ -200,7 +256,15 @@
 \newcommand\supervisor[1]{\gdef\fyp@supervisor{#1}}
 \newcommand\academicyear[1]{\gdef\fyp@year{#1}}
 \newcommand\reportdate[1]{\gdef\fyp@date{#1}}
-\newcommand\wordtarget[1]{\gdef\fyp@target{#1}}
+% \wordtarget{N}: aim for N words, +/-10% (Final Report)
+% \wordlimit{N}:  N words is the maximum (Progress Report)
+% \wordguide{N}:  N words is a recommendation only (Poster)
+\newcommand\wordtarget[1]{\gdef\fyp@target{#1}\global\fyp@maxmodefalse
+  \global\fyp@guidemodefalse}
+\newcommand\wordlimit[1]{\gdef\fyp@target{#1}\global\fyp@maxmodetrue
+  \global\fyp@guidemodefalse}
+\newcommand\wordguide[1]{\gdef\fyp@target{#1}\global\fyp@maxmodetrue
+  \global\fyp@guidemodetrue}
 \newif\ifwordcountontitle
 \studentname{Student Name}\studentid{00000000}\award{BEng (Hons)}
 \course{Course Name}\projecttitle{Project Title}\supervisor{Supervisor}
@@ -208,12 +272,13 @@
 \wordtarget{10000}
 
 \AtBeginDocument{\hypersetup{pdftitle={\fyp@title},
-  pdfauthor={\fyp@student}, pdfsubject={SEF639 Final Report}}}
+  pdfauthor={\fyp@student}, pdfsubject={SEF639 \fyp@doctype}}}
 
 % =====================================================================
 % Main body and word count
 % =====================================================================
-\directlua{dofile(kpse.find_file("setup/wordcount.lua") or "setup/wordcount.lua")}
+\directlua{dofile(kpse.find_file("setup/wordcount.lua") or "setup/wordcount.lua")
+  fyp_wc.unit = "c@\fyp@unit"}
 \providecommand\fyp@lastwords{--}   % value from the previous run (.aux)
 
 % Headers and footers are built in the output routine: do not count them
@@ -221,12 +286,12 @@
 \newcommand\fyp@resume{\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
 \AtBeginDocument{\output=\expandafter{\expandafter\fyp@pause\the\output\fyp@resume}}
 
-% Remember chapter titles for the word-count report
-\pretocmd{\addchaptertocentry}%
+% Remember chapter/section titles for the word-count report
+\expandafter\pretocmd\csname add\fyp@unit tocentry\endcsname%
   {\protected@edef\fyp@tmp{#2}\expandafter\global\expandafter\let\csname fyp@chaptitle@#1\endcsname\fyp@tmp}{}{}
 
 \newcommand\startmainmatter{%
-  \clearpage\pagenumbering{arabic}% Introduction starts on page 1
+  \clearpage\pagenumbering{arabic}% main body starts on page 1
   \par\directlua{fyp_wc.active = true}}
 
 \newcommand\stopmainmatter{%
@@ -234,13 +299,25 @@
   \edef\fyp@words{\directlua{tex.sprint(fyp_wc.total)}}%
   \immediate\write\@mainaux{\gdef\string\fyp@lastwords{\fyp@words}}%
   \typeout{^^J*** Main body word count: \fyp@words\space
-    (target \fyp@target) ***^^J}%
-  \ifnum\numexpr10*\fyp@words<\numexpr9*\fyp@target\relax
-    \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
-      more than 10\% below the target of \fyp@target}\fi
-  \ifnum\numexpr10*\fyp@words>\numexpr11*\fyp@target\relax
-    \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
-      more than 10\% above the target of \fyp@target}\fi}
+    (\iffyp@maxmode maximum\else target\fi\space\fyp@target) ***^^J}%
+  \iffyp@guidemode
+    \ifnum\fyp@words>\fyp@target\relax
+      \PackageWarningNoLine{SEF639}{The text has \fyp@words\space words,
+        more than the recommended \fyp@target. Consider replacing text
+        with figures}\fi
+  \else\iffyp@maxmode
+    \ifnum\fyp@words>\fyp@target\relax
+      \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
+        more than the maximum of \fyp@target. Text beyond the maximum
+        will be disregarded}\fi
+  \else
+    \ifnum\numexpr10*\fyp@words<\numexpr9*\fyp@target\relax
+      \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
+        more than 10\% below the target of \fyp@target}\fi
+    \ifnum\numexpr10*\fyp@words>\numexpr11*\fyp@target\relax
+      \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
+        more than 10\% above the target of \fyp@target}\fi
+  \fi\fi}
 
 % Word-count report (draft mode only, printed after the appendices)
 \newcommand\FYPwcrow[2]{%
@@ -249,25 +326,79 @@
 \newcommand\wordcountreport{%
   \iffinalmode\else
   \clearpage
-  \addchap{Word Count Report (draft only)}
+  \fyp@addunnumbered{Word Count Report (draft only)}
   This page is only printed in draft mode. It counts the words of the main
   body as typeset: body text, headings and list items. Captions, tables,
   footnotes, equations, guidance boxes, front matter, references and
-  appendices are not counted. The Handbook expects the main body to be
-  within $\pm$10\% of the target.
+  appendices are not counted.
+  \iffyp@maxmode The Handbook sets a maximum length; any text beyond the
+  maximum is disregarded and not taken into account in the mark.
+  \else The Handbook expects the main body to be within $\pm$10\% of the
+  target.\fi
   \begin{center}
   \begin{tabular}{rlr}
     \toprule
-    & \textbf{Chapter} & \textbf{Words}\\ \midrule
+    & \textbf{\fyp@unitname} & \textbf{Words}\\ \midrule
     \directlua{fyp_wc.report_rows()}
     \midrule
     & \textbf{Main body total} & \textbf{\num{\fyp@words}}\\
+    \iffyp@maxmode
+    & Maximum & \num{\fyp@target}\\
+    \else
     & Target ($\pm$10\%) & \num{\fyp@target}
       (\num{\the\numexpr9*\fyp@target/10\relax}--\num{\the\numexpr11*\fyp@target/10\relax})\\
+    \fi
     \bottomrule
   \end{tabular}
   \end{center}
   \fi}
+
+% =====================================================================
+% Title page -- layout from Appendix E of the SEF639 Project Handbook,
+% filled in from the details in main.tex.
+% Logo: not part of the template. Download the Solent University logo from
+% the SEF639 module page on SOL and save it as figures/solent-logo.pdf (or
+% .png). Until then a placeholder is shown.
+% =====================================================================
+\newcommand\maketitlepage{%
+\begin{titlepage}
+  \centering
+  \IfFileExists{figures/solent-logo.pdf}{\includegraphics[width=0.3\linewidth]{solent-logo}}{%
+  \IfFileExists{figures/solent-logo.png}{\includegraphics[width=0.3\linewidth]{solent-logo}}{%
+    {\Large\sffamily\bfseries Southampton Solent University\par}
+    \placeholder[0.6\linewidth]{Logo: download it from the SEF639 module page
+      on SOL and save it as \texttt{figures/solent-logo.pdf}}}}
+  \vspace*{0.08\textheight}
+
+  {\Large School of Technology and Maritime Industries\par}
+  \vspace{0.04\textheight}
+  {\color{SolentRed}\Huge\sffamily\bfseries \fyp@award\ \fyp@course\par}
+  \vspace{0.08\textheight}
+
+  {\Large
+  \begin{tabular}{rl}
+    Academic Year: & \fyp@year\\[2pt]
+    Student:       & \fyp@student\\[2pt]
+    Student ID:    & \fyp@studentid\\
+  \end{tabular}\par}
+  \vspace{0.05\textheight}
+  {\LARGE\sffamily\bfseries\color{Navy} \fyp@title\par}
+  \vfill
+
+  {\Large Supervisor: \fyp@supervisor\par}
+  \vspace{4pt}
+  {\Large Date: \fyp@date\par}
+  \vfill
+
+  {\large SEF639 Final Year Project -- \fyp@doctype\par}
+  \ifwordcountontitle
+    {\normalsize Word count (main body): \fyp@lastwords\par}
+  \else\iffinalmode\else
+    \vspace{6pt}
+    {\small\color{SolentRed} DRAFT \textbar\ main body: \fyp@lastwords\ words
+      (\iffyp@maxmode maximum \fyp@target\else target \fyp@target\ $\pm$10\%\fi)\par}
+  \fi\fi
+\end{titlepage}}
 
 % =====================================================================
 % Front and back matter helpers
@@ -292,16 +423,17 @@
 \else
   \NewDocumentEnvironment{guidance}{O{Guidance}}
     {\par\directlua{fyp_wc.paused = fyp_wc.paused + 1}%
-     \begin{tcolorbox}[enhanced, breakable, colback=SkyBlue!8,
-      colframe=SkyBlue, coltitle=SeaBlue, fonttitle=\sffamily\bfseries\small,
-      fontupper=\small, title={#1}, boxrule=0.6pt, arc=1mm,
+     \begin{tcolorbox}[enhanced, breakable, colback=white,
+      colframe=SkyBlue, colbacktitle=SkyBlue!40, coltitle=Navy, fonttitle=\sffamily\bfseries\small,
+      fontupper=\iffyp@poster\scriptsize\else\small\fi, title={#1},
+      boxrule=0.6pt, arc=1mm,
       before upper={\setlength{\parskip}{4pt}}]}
     {\end{tcolorbox}\par\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
 \fi
 
 % Grey placeholder box, e.g. for a missing figure or logo
 \newcommand\placeholder[2][\linewidth]{%
-  \begin{tcolorbox}[width=#1, colback=black!4, colframe=black!35,
+  \begin{tcolorbox}[width=#1, colback=black!10, colframe=black!40,
     boxrule=0.5pt, arc=0pt, halign=center, valign=center,
     fontupper=\small\sffamily\color{black!60}, before skip=4pt, after skip=4pt]
   #2\end{tcolorbox}}
@@ -321,9 +453,9 @@
 \Crefname{requirement}{Requirement}{Requirements}
 
 % Test outcomes
-\newcommand\pass{\textcolor{green!45!black}{\textbf{Pass}}}
+\newcommand\pass{\textcolor{Teal}{\textbf{Pass}}}
 \newcommand\fail{\textcolor{SolentRed}{\textbf{Fail}}}
-\newcommand\partpass{\textcolor{orange!80!black}{\textbf{Partial}}}
+\newcommand\partpass{\textcolor{Orange}{\textbf{Partial}}}
 
 % Risk register: \riskrating{likelihood 1-5}{severity 1-5}
 % prints the product and colours the table cell
@@ -352,32 +484,31 @@
 
 % TikZ styles for flowcharts (methodology, system diagrams)
 \tikzset{
-  fyp node/.style={draw=SeaBlue, thick, align=center, font=\small,
+  fyp node/.style={draw=Navy, thick, text=Navy, align=center, font=\small,
     execute at begin node={\hyphenpenalty=10000},
     minimum height=2.4em, inner sep=4pt},
-  fyp process/.style={fyp node, rectangle, fill=SkyBlue!12,
+  fyp process/.style={fyp node, rectangle, fill=SkyBlue!40,
     text width=9em},
-  fyp terminal/.style={fyp node, rounded rectangle, fill=SeaBlue!15,
+  fyp terminal/.style={fyp node, rounded rectangle, fill=black!10,
     text width=7em},
-  fyp decision/.style={fyp node, diamond, aspect=2.2, fill=SolentRed!8,
+  fyp decision/.style={fyp node, diamond, aspect=2.2, fill=Yellow!40,
     text width=6.5em, inner sep=1pt},
   fyp io/.style={fyp node, trapezium, trapezium left angle=72,
     trapezium right angle=108, trapezium stretches body,
-    fill=black!5, text width=8em},
+    fill=black!10, text width=8em},
   fyp data/.style={fyp node, cylinder, shape border rotate=90,
-    aspect=0.15, fill=black!5, text width=6em},
-  fyp deliverable/.style={fyp node, rectangle, double, fill=SkyBlue!25,
+    aspect=0.15, fill=black!10, text width=6em},
+  fyp deliverable/.style={fyp node, rectangle, double, fill=SkyBlue!60,
     text width=9em},
-  fyp arrow/.style={-{Stealth[length=2.5mm]}, thick, SeaBlue},
-  fyp group/.style={draw=black!35, dashed, rounded corners, inner sep=8pt,
-    fill=black!2}
+  fyp arrow/.style={-{Stealth[length=2.5mm]}, thick, Navy},
+  fyp group/.style={draw=black!40, dashed, rounded corners, inner sep=8pt}
 }
 
 % Code listings
 \lstdefinestyle{fyp}{
   basicstyle=\ttfamily\footnotesize, numbers=left,
   numberstyle=\tiny\color{black!50}, frame=single, rulecolor=\color{black!25},
-  keywordstyle=\color{SeaBlue}\bfseries, commentstyle=\color{green!40!black},
+  keywordstyle=\color{SeaBlue}\bfseries, commentstyle=\color{Teal},
   stringstyle=\color{SolentRed}, breaklines=true, showstringspaces=false,
   captionpos=b, tabsize=2}
 \lstset{style=fyp}

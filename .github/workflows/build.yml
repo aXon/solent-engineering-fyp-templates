@@ -8,53 +8,86 @@ on:
   workflow_dispatch:
 
 jobs:
-  final-report:
+  shared-code:
+    # every template must contain an identical copy of shared/setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check that the shared code is in sync
+        run: |
+          tools/sync-shared.sh
+          git diff --exit-code || {
+            echo "::error::A template's setup/ differs from shared/setup. Run tools/sync-shared.sh and commit."
+            exit 1; }
 
-      - name: Build draft
+  build:
+    needs: shared-code
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - folder: final-report
+            pretex: ''
+            name: final-report-draft
+          - folder: final-report
+            pretex: \def\reportmode{final}
+            name: final-report-final
+          - folder: progress-report
+            pretex: ''
+            name: progress-report-draft
+          - folder: progress-report
+            pretex: \def\reportmode{final}
+            name: progress-report-final
+          - folder: poster
+            pretex: ''
+            name: poster-landscape-draft
+          - folder: poster
+            pretex: \def\reportmode{final}
+            name: poster-landscape-final
+          - folder: poster
+            pretex: \def\posterorientation{portrait}\def\reportmode{final}
+            name: poster-portrait-final
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.name }}
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
-          working_directory: final-report
-          latexmk_use_lualatex: true
-          args: -interaction=nonstopmode -file-line-error -jobname=final-report-draft
-
-      - name: Build final
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: main.tex
-          working_directory: final-report
+          working_directory: ${{ matrix.folder }}
           latexmk_use_lualatex: true
           args: >-
-            -interaction=nonstopmode -file-line-error -jobname=final-report-final
-            -usepretex=\def\reportmode{final}
+            -interaction=nonstopmode -file-line-error -jobname=${{ matrix.name }}
+            -usepretex=${{ matrix.pretex }}
 
       - name: Word count
-        run: grep -h "Main body word count" final-report/final-report-final.log || true
-
-      - name: Zip template for Overleaf
-        run: |
-          cd final-report
-          zip -r ../final-report-template.zip . \
-            -x '*.aux' '*.log' '*.fls' '*.fdb_latexmk' '*.bbl' '*.bcf' '*.blg' \
-               '*.run.xml' '*.synctex.gz' '*.toc' '*.lof' '*.lot' '*.gl?' '*.ac?' \
-               '*.al?' '*.sl?' '*.ist' '*.out' '*.pdf'
+        run: grep -h "Main body word count" ${{ matrix.folder }}/${{ matrix.name }}.log || true
 
       - uses: actions/upload-artifact@v4
         with:
-          name: final-report
-          path: |
-            final-report/final-report-draft.pdf
-            final-report/final-report-final.pdf
-            final-report-template.zip
+          name: ${{ matrix.name }}
+          path: ${{ matrix.folder }}/${{ matrix.name }}.pdf
 
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: pdfs
+          merge-multiple: true
+      - name: Zip each template for Overleaf
+        run: |
+          for t in final-report progress-report poster; do
+            (cd "$t" && zip -r "../$t-template.zip" . -x '*.pdf')
+          done
+      - uses: softprops/action-gh-release@v2
         with:
           files: |
-            final-report/final-report-draft.pdf
-            final-report/final-report-final.pdf
-            final-report-template.zip
+            pdfs/*.pdf
+            *-template.zip

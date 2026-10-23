@@ -1,0 +1,90 @@
+% !TeX program = lualatex
+% =====================================================================
+%  SEF639 Final Year Project -- Progress Report (AE1) template
+%  Southampton Solent University, School of Technology and Maritime
+%  Industries
+%
+%  Build:     latexmk            (uses latexmkrc in this folder)
+%  Overleaf:  Menu -> Settings -> Compiler: LuaLaTeX
+%
+%  The sections follow the Progress Report content listed in the SEF639
+%  Project Handbook (Phase Two). Read the AE1 assessment brief as well.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% 1. Draft or final?
+%    draft: guidance boxes, \todo notes, DRAFT watermark and stamp,
+%           word-count report at the end
+%    final: all of that is switched off -- use this for submission
+% ---------------------------------------------------------------------
+\providecommand\reportmode{draft}   % draft | final
+
+% Font: brand   = Carlito (same metrics as Calibri, the system font of the
+%                 Southampton Solent University brand guidelines)
+%       classic = Latin Modern (traditional LaTeX serif look)
+\providecommand\fontstyle{brand}  % brand | classic
+
+\documentclass[a4paper, 11pt, oneside, numbers=noenddot,
+  bibliography=totoc]{scrartcl}
+
+\input{setup/layout}
+
+% ---------------------------------------------------------------------
+% 2. Your details (these fill the title page and the PDF properties)
+% ---------------------------------------------------------------------
+\studentname{Firstname Lastname}
+\studentid{12345678}
+\award{BEng (Hons)}
+% Your course: keep exactly one of the following lines active
+\course{Mechanical Engineering}
+% \course{Electronic Engineering}
+% \course{Electronic Engineering (Apprenticeship)}
+% \course{Renewable Energy Engineering}
+\projecttitle{Design and Evaluation of a Low-Cost Data Logger for
+  Domestic Heating Systems}
+\supervisor{Dr Firstname Lastname}
+\academicyear{2026--27}
+\reportdate{January 2027}          % month and year the report was created
+
+\wordlimit{2000}                   % main body; text beyond the maximum is disregarded
+
+% ---------------------------------------------------------------------
+% 3. References
+% ---------------------------------------------------------------------
+\addbibresource{references.bib}
+
+% ---------------------------------------------------------------------
+% 4. Your own packages and commands go here
+% ---------------------------------------------------------------------
+
+
+\begin{document}
+%TC:ignore
+% ------------------------------- front matter (roman page numbers) --
+\maketitlepage
+\pagenumbering{roman}
+\input{frontmatter/ai-declaration}
+\tableofcontents
+%TC:endignore
+
+% ------------------------------- main body (counted, page 1 onwards) --
+\startmainmatter
+\input{sections/01-background}
+\input{sections/02-literature}
+\input{sections/03-specification}
+\input{sections/04-methodology}
+\input{sections/05-phase-two-review}
+\input{sections/06-candidate-solutions}
+\input{sections/07-options-analysis}
+\input{sections/08-selected-solution}
+\input{sections/09-phase-three-plan}
+\stopmainmatter
+
+%TC:ignore
+% ------------------------------- back matter (not counted) -----------
+\printreferences
+\appendix
+\input{appendices/a-project-plan}
+\wordcountreport                     % draft mode only
+%TC:endignore
+\end{document}

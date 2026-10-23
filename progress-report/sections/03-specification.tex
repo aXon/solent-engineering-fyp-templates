@@ -1,0 +1,38 @@
+\section{Project Specification}
+\label{sec:specification}
+
+\begin{guidance}[What this section does -- about 200 words plus the table]
+A detailed product or process design specification, justified by the
+literature, the market research or a user survey. Use short, definitive
+statements and quantify every parameter you can. Number the requirements
+with \verb|\req{req:label}|: the IDs R1, R2 \ldots\ can then be used as
+evaluation criteria in the options analysis (\cref{sec:options}) and, later,
+in the testing and evaluation of the Final Report. See \textcite{cross2008}
+and \textcite{ulrich2012}; on testable requirements \textcite{dick2017}.
+\end{guidance}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Product design specification (example)}
+  \label{tab:requirements}
+  \small
+  \begin{tabular}{p{0.06\linewidth}p{0.14\linewidth}p{0.36\linewidth}cp{0.2\linewidth}}
+    \toprule
+    ID & Category & Requirement & D/W & Source \\
+    \midrule
+    \req{req:accuracy} & Performance & Temperature measured with an accuracy
+      of $\pm\SI{0.5}{\celsius}$ between \SIrange{0}{40}{\celsius}
+      & D & Market survey (\cref{tab:market}) \\
+    \req{req:interval} & Performance & Logging interval adjustable from
+      \SIrange{1}{60}{\minute} & D & User survey \\
+    \req{req:battery} & Power & Battery life of at least 30 days at a
+      \SI{5}{\minute} interval & D & User survey \\
+    \req{req:cost} & Cost & Component cost below £40 per unit & D & Market survey \\
+    \req{req:size} & Size & Fits within a $\SI{80}{\milli\metre} \times
+      \SI{50}{\milli\metre} \times \SI{25}{\milli\metre}$ enclosure & W & Supervisor \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Requirements marked \enquote{D} (demand) must be met; \enquote{W} (wish)
+are desirable.

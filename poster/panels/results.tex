@@ -1,0 +1,22 @@
+\begin{guidance}
+The key results with numbers, one or two clear figures, and the comparison
+with the specification. Make plots readable from two metres away.
+\end{guidance}
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[width=0.95\linewidth, height=5.5cm, xmin=0, xmax=120,
+      xlabel={Time in \si{\minute}}, ylabel={Temperature in \si{\celsius}},
+      grid=major, grid style={black!10}, legend cell align=left,
+      every axis plot/.append style={very thick}, tick label style={font=\normalsize},
+      label style={font=\normalsize}, legend style={font=\normalsize}]
+    \addplot table[col sep=comma, x=time_min, y=logger_C] {data/cooling-test.csv};
+    \addlegendentry{Data logger}
+    \addplot+[dashed, mark=none] table[col sep=comma, x=time_min, y=reference_C] {data/cooling-test.csv};
+    \addlegendentry{Reference}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+Mean absolute error \SI{0.21}{\celsius}: within the required
+$\pm\SI{0.5}{\celsius}$.

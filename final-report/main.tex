@@ -18,10 +18,15 @@
 % ---------------------------------------------------------------------
 \providecommand\reportmode{draft}   % draft | final
 
+% Font: brand   = Carlito (same metrics as Calibri, the system font of the
+%                 Southampton Solent University brand guidelines)
+%       classic = Latin Modern (traditional LaTeX serif look)
+\providecommand\fontstyle{brand}  % brand | classic
+
 \documentclass[a4paper, 11pt, oneside, chapterprefix=true,
   numbers=noenddot, listof=totoc, bibliography=totoc]{scrreprt}
 
-\input{setup/preamble}
+\input{setup/layout}
 
 % ---------------------------------------------------------------------
 % 2. Your details (these fill the title page and the PDF properties)
@@ -29,11 +34,11 @@
 \studentname{Firstname Lastname}
 \studentid{12345678}
 \award{BEng (Hons)}
+% Your course: keep exactly one of the following lines active
 \course{Mechanical Engineering}
-%   Electronic Engineering
-%   Electronic Engineering (Apprenticeship)
-%   Mechanical Engineering
-%   Renewable Energy Engineering
+% \course{Electronic Engineering}
+% \course{Electronic Engineering (Apprenticeship)}
+% \course{Renewable Energy Engineering}
 \projecttitle{Design and Evaluation of a Low-Cost Data Logger for
   Domestic Heating Systems}
 \supervisor{Dr Firstname Lastname}
@@ -60,7 +65,7 @@
 \begin{document}
 %TC:ignore
 % ------------------------------- front matter (roman page numbers) --
-\input{frontmatter/titlepage}
+\maketitlepage
 \pagenumbering{roman}
 \input{frontmatter/acknowledgements}
 \input{frontmatter/ai-declaration}

@@ -1,0 +1,179 @@
+% =====================================================================
+%  setup/layout.tex -- settings specific to the A2 poster (AE3)
+%  The shared code is in setup/fyp-common.tex.
+%
+%  Brand: Southampton Solent University brand guidelines (v2.0, 2024):
+%  Solent Red and white as lead colours, Navy for text, logo top left,
+%  recommended logo size for A2 about 60 mm (A3: 45 mm, minimum 40 mm).
+% =====================================================================
+\makeatletter
+\def\fyp@unit{poster}
+\def\fyp@doctype{Poster}
+\providecommand\posterorientation{landscape}
+\edef\fyp@orient{\posterorientation}\edef\fyp@portraitstr{portrait}
+\newif\iffyp@portrait
+\ifx\fyp@orient\fyp@portraitstr \fyp@portraittrue \fi
+\makeatother
+
+\input{setup/fyp-common}
+\wordguide{800}                  % recommendation, not a Handbook limit
+
+\makeatletter
+% ---- page: A2, landscape or portrait -------------------------------
+\iffyp@portrait
+  \usepackage[paperwidth=420mm, paperheight=594mm, margin=15mm]{geometry}
+\else
+  \usepackage[paperwidth=594mm, paperheight=420mm, margin=15mm]{geometry}
+\fi
+\pagestyle{empty}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\color{Navy}
+\usepackage{qrcode}
+
+% the poster counts all text in its panels (they are boxes)
+\directlua{fyp_wc.groups = { [""] = true, vbox = true, vtop = true }}
+
+% ---- details only the poster needs ---------------------------------
+\newcommand\fyp@paneltitle[1]{\csname fyp@pt@#1\endcsname}
+\newcommand\paneltitle[2]{\expandafter\gdef\csname fyp@pt@#1\endcsname{#2}}
+\paneltitle{intro}{Introduction and Aims}
+\paneltitle{method}{Methodology}
+\paneltitle{design}{Design and Implementation}
+\paneltitle{results}{Results}
+\paneltitle{conclusions}{Conclusions}
+\paneltitle{references}{References}
+\newcommand\acknowledgements[1]{\gdef\fyp@ack{#1}}
+\newcommand\aistatement[1]{\gdef\fyp@ai{#1}}
+\newcommand\qrlink[2]{\gdef\fyp@qrurl{#1}\gdef\fyp@qrtext{#2}}
+\acknowledgements{}\aistatement{No AI tools were used in the preparation of this poster.}
+\let\fyp@qrurl\@empty
+
+% ---- styles ----------------------------------------------------------
+\tcbset{
+  fyp panel/.style={enhanced, colback=white, colframe=SolentRed,
+    colbacktitle=SolentRed, coltitle=white, boxrule=1.2pt, arc=0pt,
+    fonttitle=\sffamily\bfseries\LARGE, toptitle=3mm, bottomtitle=3mm,
+    left=6mm, right=6mm, top=5mm, bottom=5mm, fontupper=\color{Navy},
+    before upper={\setlength{\parskip}{0.4em}}},
+  fyp plain/.style={enhanced, frame hidden, colback=white, boxrule=0pt,
+    left=0pt, right=0pt, top=0pt, bottom=0pt, fontupper=\color{Navy}},
+}
+
+% ---- header ------------------------------------------------------------
+\newcommand\fyp@logo{%
+  \IfFileExists{figures/solent-logo.pdf}{\includegraphics[width=60mm]{solent-logo}}{%
+  \IfFileExists{figures/solent-logo.png}{\includegraphics[width=60mm]{solent-logo}}{%
+    \begin{tcolorbox}[width=60mm, height=60mm, colback=black!10,
+      colframe=black!40, boxrule=0.5pt, arc=0pt, halign=center,
+      valign=center, fontupper=\scriptsize\sffamily\color{black!60}]
+      Logo: download it from the SEF639 module page on SOL and save it
+      as figures/solent-logo.pdf
+    \end{tcolorbox}}}}
+\newcommand\fyp@header{%
+  \begin{tcolorbox}[fyp plain, sidebyside, lefthand width=70mm, sidebyside gap=12mm]
+    \fyp@logo
+  \tcblower
+    {\fontsize{54}{62}\selectfont\sffamily\bfseries\color{Navy}\fyp@title\par}
+    \vspace{4mm}
+    {\Large\sffamily\color{SolentRed}\bfseries\fyp@student\par}
+    {\large \fyp@award\ \fyp@course\ \textbar\ Supervisor: \fyp@supervisor\par}
+    {\large School of Technology and Maritime Industries \textbar\ SEF639
+      Final Year Project \fyp@year\par}
+  \end{tcolorbox}%
+  \par\vspace{2mm}{\color{SolentRed}\rule{\linewidth}{2pt}}}
+
+% ---- footer: acknowledgements, AI statement, QR code ------------------
+\newcommand\fyp@footer{%
+  \begin{tcolorbox}[fyp plain, fontupper=\normalsize\color{Navy}]
+  \ifx\fyp@qrurl\@empty\else
+    \begin{minipage}[c]{35mm}\centering
+      \qrcode[height=30mm]{\fyp@qrurl}
+    \end{minipage}\hspace{4mm}%
+    \begin{minipage}[c]{60mm}\raggedright\small\fyp@qrtext\end{minipage}%
+    \hspace{8mm}%
+  \fi
+  \begin{minipage}[c]{\dimexpr\linewidth-110mm\relax}
+    \ifx\fyp@ack\@empty\else\textbf{Acknowledgements:} \fyp@ack\par\fi
+    \textbf{Use of AI:} \fyp@ai\par
+    \iffinalmode\else
+      {\small\color{SolentRed} DRAFT \textbar\ compiled \DTMnow\ \textbar\
+        poster text: \fyp@lastwords\ words (recommended up to \fyp@target)\par}
+    \fi
+  \end{minipage}
+  \end{tcolorbox}}
+
+% ---- panel content ---------------------------------------------------
+\newcommand\fyp@panel[1]{%
+  \directlua{fyp_wc.active = true}\input{panels/#1}\par
+  \directlua{fyp_wc.active = false}}
+\newcommand\fyp@refpanel{%
+  {\small\printbibliography[heading=none, category=cited]}}
+
+% ---- the poster ------------------------------------------------------
+% Header and footer span the full width; in between, the panels are
+% stacked in columns (landscape: three, portrait: two). The last panel of
+% each column stretches to the bottom. If a panel is too full, LaTeX
+% reports an overfull box: shorten the text or make a figure smaller.
+\newsavebox\fyp@hbox \newsavebox\fyp@fbox
+\newlength\fyp@colh \newlength\fyp@colw
+\newlength\fyp@gap \setlength\fyp@gap{10mm}
+\newcommand\fyp@box[2][]{% #1 extra options, #2 panel key/file
+  \begin{tcolorbox}[fyp panel, title=\fyp@paneltitle{#2}, #1]
+    \ifcsname fyp@special@#2\endcsname\csname fyp@special@#2\endcsname
+    \else\fyp@panel{\csname fyp@file@#2\endcsname}\fi
+  \end{tcolorbox}}
+\@namedef{fyp@file@intro}{introduction}
+\@namedef{fyp@file@method}{methodology}
+\@namedef{fyp@file@design}{design}
+\@namedef{fyp@file@results}{results}
+\@namedef{fyp@file@conclusions}{conclusions}
+\@namedef{fyp@special@references}{\fyp@refpanel}
+% One column: the panels in #1 (comma list) at their natural height, then
+% panel #2, which stretches to the bottom of the column.
+\newsavebox\fyp@colbox \newsavebox\fyp@testbox \newlength\fyp@rest
+\newcommand\fyp@column[2]{%
+  \sbox\fyp@colbox{\begin{minipage}[t]{\fyp@colw}\vspace{0pt}%
+    \@for\fyp@key:=#1\do{\fyp@box[nobeforeafter]{\fyp@key}\par
+      \nointerlineskip\vspace*{\fyp@gap}}%
+  \end{minipage}}%
+  \setlength\fyp@rest{\dimexpr\fyp@colh-\ht\fyp@colbox-\dp\fyp@colbox\relax}%
+  % warn if the column is too full (measured without counting words)
+  \directlua{fyp_wc.paused = fyp_wc.paused + 1}%
+  \sbox\fyp@testbox{\begin{minipage}[t]{\fyp@colw}\vspace{0pt}%
+    \fyp@box[nobeforeafter]{#2}\end{minipage}}%
+  \directlua{fyp_wc.paused = fyp_wc.paused - 1}%
+  \ifdim\dimexpr\ht\fyp@testbox+\dp\fyp@testbox\relax>\fyp@rest
+    \PackageWarningNoLine{SEF639}{The column ending with panel '#2' is too
+      full by \the\dimexpr\ht\fyp@testbox+\dp\fyp@testbox-\fyp@rest\relax.
+      Shorten the text or make a figure smaller}%
+  \fi
+  \begin{minipage}[t][\fyp@colh][t]{\fyp@colw}\vspace{0pt}%
+    \usebox\fyp@colbox\par\nointerlineskip
+    \fyp@box[height=\fyp@rest, nobeforeafter]{#2}%
+  \end{minipage}}
+\newcommand\makeposter{%
+  \sbox\fyp@hbox{\parbox[b]{\textwidth}{\fyp@header}}%
+  \sbox\fyp@fbox{\parbox[b]{\textwidth}{\fyp@footer}}%
+  \setlength\fyp@colh{\dimexpr\textheight-\ht\fyp@hbox-\dp\fyp@hbox
+    -\ht\fyp@fbox-\dp\fyp@fbox-2\fyp@gap-2pt\relax}%
+  \iffyp@portrait
+    \setlength\fyp@colw{\dimexpr(\textwidth-\fyp@gap)/2\relax}%
+  \else
+    \setlength\fyp@colw{\dimexpr(\textwidth-2\fyp@gap)/3\relax}%
+  \fi
+  \begingroup\setlength\parskip{0pt}%
+  \noindent\usebox\fyp@hbox\par\nointerlineskip\vspace*{\fyp@gap}%
+  \noindent
+  \iffyp@portrait
+    \fyp@column{intro,method}{design}\hspace{\fyp@gap}%
+    \fyp@column{results,conclusions}{references}%
+  \else
+    \fyp@column{intro}{method}\hspace{\fyp@gap}%
+    \fyp@column{design}{results}\hspace{\fyp@gap}%
+    \fyp@column{conclusions}{references}%
+  \fi
+  \par\nointerlineskip\vspace*{\fyp@gap}\noindent\usebox\fyp@fbox\par
+  \endgroup
+  \stopmainmatter}
+\makeatother

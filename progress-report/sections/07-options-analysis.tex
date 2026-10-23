@@ -1,0 +1,32 @@
+\section{Options Analysis}
+\label{sec:options}
+
+\begin{guidance}[What this section does -- about 200 words plus the matrix]
+The pros and cons of each candidate solution, evaluation criteria derived
+from the specification, and a structured decision-making method such as a
+weighted scoring matrix, a Pugh matrix, MCDA or a cost-benefit analysis
+(Handbook, Phase Two). Justify each weight. The macros do the arithmetic:
+\verb|\resetscores{A,B,C}|, \verb|\weight{...}|, \verb|\score{A}{...}|,
+\verb|\weightsum| and \verb|\scoretotal{A}|. Use a plain \texttt{tabular},
+not \texttt{tabularx}.
+\end{guidance}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Weighted decision matrix (scores 1--5, example)}
+  \label{tab:decision}
+  \resetscores{A,B,C}
+  \begin{tabular}{llccc}
+    \toprule
+    Criterion (requirement) & Weight & Concept A & Concept B & Concept C \\
+    \midrule
+    Accuracy (\ref{req:accuracy})    & \weight{0.30} & \score{A}{4} & \score{B}{5} & \score{C}{3} \\
+    Battery life (\ref{req:battery}) & \weight{0.25} & \score{A}{3} & \score{B}{4} & \score{C}{5} \\
+    Cost (\ref{req:cost})            & \weight{0.25} & \score{A}{5} & \score{B}{2} & \score{C}{4} \\
+    Size (\ref{req:size})            & \weight{0.10} & \score{A}{3} & \score{B}{3} & \score{C}{4} \\
+    Ease of manufacture              & \weight{0.10} & \score{A}{4} & \score{B}{3} & \score{C}{3} \\
+    \midrule
+    \textbf{Weighted total} & \weightsum & \textbf{\scoretotal{A}} & \textbf{\scoretotal{B}} & \textbf{\scoretotal{C}} \\
+    \bottomrule
+  \end{tabular}
+\end{table}

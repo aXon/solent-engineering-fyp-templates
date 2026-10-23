@@ -1,0 +1,97 @@
+\section{Review of Phase Two}
+\label{sec:review}
+
+\begin{guidance}[What this section does -- about 250 words plus figure and table]
+Demonstrates your project monitoring and control so far (Handbook, Phase
+Two): the detailed project plan as a Gantt chart with WBS numbers that match
+your logbook, a review of progress against the original plan with an
+analysis of any deviations, the risk analysis, the resource implications and
+the ethical considerations. A full-size chart can go in
+\cref{app:project-plan}.
+\end{guidance}
+
+\subsection{Project plan and progress}
+\label{sec:plan}
+
+\Cref{fig:gantt} compares the original plan (grey) with the actual progress
+(blue) at the end of week 12.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{ganttchart}[
+      x unit=0.38cm, y unit chart=0.55cm, y unit title=0.55cm,
+      vgrid={*1{black!10, line width=0.3pt}}, hgrid,
+      title label font=\scriptsize, bar label font=\scriptsize,
+      title/.style={fill=black!10, draw=black!40},
+      bar/.style={fill=black!40, draw=none}, bar height=0.35,
+      bar top shift=0.1, bar label node/.append style={align=left},
+      milestone/.style={fill=SolentRed, draw=none},
+      milestone label font=\scriptsize\itshape,
+      today=12, today label=now, today label font=\scriptsize,
+      today rule/.style={draw=SolentRed, thick, dashed}
+    ]{1}{30}
+    \gantttitle{Semester 1 (weeks)}{12}
+    \gantttitle{Break}{3}
+    \gantttitle{Semester 2 (weeks)}{15}\\
+    \gantttitlelist{1,...,12}{1}
+    \gantttitle{}{3}
+    \gantttitlelist{1,...,15}{1}\\
+    \ganttbar{WBS 1 Proposal}{1}{2}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{1}{3}\\[grid]
+    \ganttbar{WBS 2 Research \& specification}{3}{9}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{3}{10}\\[grid]
+    \ganttbar{WBS 3 Concept design}{8}{12}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{9}{12}\\[grid]
+    \ganttmilestone{AE1 Progress Report}{12}\\
+    \ganttbar{WBS 4 Implementation}{16}{24}\\[grid]
+    \ganttbar{WBS 5 Testing}{22}{26}\\[grid]
+    \ganttbar{WBS 6 Final report}{24}{29}\\[grid]
+    \ganttmilestone{AE2 Final Report}{29}
+  \end{ganttchart}
+  \caption{Project plan: original plan (grey) and actual progress (blue) at week 12 (example)}
+  \label{fig:gantt}
+\end{figure}
+
+The research phase took one week longer than planned because \ldots\
+(logbook, 14 November 2026). \todo{Explain deviations.}
+
+\subsection{Risks and resources}
+\label{sec:risk}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Project risk register (example). L = likelihood, S = severity, 1--5}
+  \label{tab:risk}
+  \small
+  \begin{tabular}{p{0.04\linewidth}p{0.32\linewidth}ccp{0.15\linewidth}p{0.26\linewidth}}
+    \toprule
+    ID & Risk & L & S & Rating & Mitigation \\
+    \midrule
+    1 & Sensor delivery delayed by more than two weeks & 3 & 3 & \riskrating{3}{3}
+      & Order in week 4; identify an alternative supplier \\
+    2 & Laboratory access limited during assessment weeks & 2 & 2 & \riskrating{2}{2}
+      & Book sessions in advance \\
+    3 & Prototype damaged during testing & 2 & 4 & \riskrating{2}{4}
+      & Spare components; test at reduced load first \\
+    4 & Final report underestimated & 4 & 4 & \riskrating{4}{4}
+      & Start writing in Semester 2, week 6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{guidance}
+Risk rating = likelihood $\times$ severity, calculated and coloured by
+\verb|\riskrating{L}{S}|. Principles: BS ISO 31000 \parencite{bsi2018risk}.
+Health and safety hazards of practical work are assessed separately in a
+GRA01 form. State the resources you need (equipment, laboratory time,
+components, budget) and how they affect the project.
+\end{guidance}
+
+\subsection{Ethics}
+\label{sec:ethics}
+
+\begin{guidance}
+State the outcome of the ethics application in the Solent Ethics App and any
+ethical considerations, for example a user survey or data protection
+\parencite{engc2026sep}.
+\end{guidance}

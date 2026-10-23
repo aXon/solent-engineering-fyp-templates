@@ -1,0 +1,20 @@
+# latexmk configuration for the SEF639 report template
+# Usage:  latexmk            (draft, as set in main.tex)
+#         latexmk -usepretex='\def\reportmode{final}'   (final build)
+$pdf_mode = 4;                     # LuaLaTeX
+$lualatex = 'lualatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+$bibtex_use = 2;                   # run biber and clean .bbl
+@default_files = ('main.tex');
+
+# glossaries: notation, abbreviations and glossary
+add_cus_dep('glo', 'gls', 0, 'run_makeglossaries');
+add_cus_dep('acn', 'acr', 0, 'run_makeglossaries');
+add_cus_dep('slo', 'sls', 0, 'run_makeglossaries');
+sub run_makeglossaries {
+  my ($base_name, $path) = fileparse($_[0]);
+  my @args = ('-q', $base_name);
+  unshift @args, '-d', $path if $path;
+  return system('makeglossaries', @args);
+}
+push @generated_exts, qw(glo gls glg acn acr alg slo sls slg ist);
+$clean_ext .= ' %R.ist %R.xdy run.xml synctex.gz';

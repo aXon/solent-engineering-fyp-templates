@@ -1,6 +1,7 @@
 -- =====================================================================
 --  wordcount.lua -- counts the words of the main body while it is typeset
---  Part of the SEF639 Final Report template (Solent University)
+--  Shared by the SEF639 LaTeX templates (Solent University).
+--  Master copy: shared/setup/ -- do not edit the copies in the templates.
 --
 --  How it works: LuaTeX hands every finished paragraph to the callback
 --  below before breaking it into lines. Between \wordcountstart and
@@ -27,6 +28,8 @@ wc.paused   = 0      -- >0 inside guidance boxes
 wc.total    = 0
 wc.chapters = {}
 wc.maxchap  = 0
+wc.unit     = "c@chapter"   -- counter of the main-body unit (set by TeX)
+wc.groups   = { [""] = true }  -- paragraph contexts that are counted
 
 local GLYPH = node.id("glyph")
 local GLUE  = node.id("glue")
@@ -75,10 +78,12 @@ end
 
 function wc.filter(head, groupcode)
   -- groupcode "" = a paragraph in the running text; captions ("vbox"),
-  -- table cells ("vtop"/"hbox") and footnotes ("insert") are skipped
-  if wc.active and wc.paused == 0 and groupcode == "" then
+  -- table cells ("vtop"/"hbox") and footnotes ("insert") are skipped.
+  -- The poster also counts "vbox", because all its text sits in boxes.
+  if wc.active and wc.paused == 0 and wc.groups[groupcode] then
     local n  = count_list(head)
-    local ch = tex.getcount("c@chapter")
+    local ok, ch = pcall(tex.getcount, wc.unit)   -- no such counter: 0
+    if not ok then ch = 0 end
     wc.chapters[ch] = (wc.chapters[ch] or 0) + n
     if ch > wc.maxchap then wc.maxchap = ch end
     wc.total = wc.total + n
@@ -88,7 +93,7 @@ end
 
 luatexbase.add_to_callback("pre_linebreak_filter", wc.filter, "fyp.wordcount")
 
--- one row per chapter for the word-count report (draft mode)
+-- one row per chapter (or section) for the word-count report (draft mode)
 function wc.report_rows()
   for ch = 1, wc.maxchap do
     tex.sprint(string.format("\\FYPwcrow{%d}{%d}", ch, wc.chapters[ch] or 0))

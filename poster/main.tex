@@ -1,0 +1,72 @@
+% !TeX program = lualatex
+% =====================================================================
+%  SEF639 Final Year Project -- A2 poster (AE3) template
+%  Southampton Solent University, School of Technology and Maritime
+%  Industries
+%
+%  Build:     latexmk            (uses latexmkrc in this folder)
+%  Overleaf:  Menu -> Settings -> Compiler: LuaLaTeX
+%
+%  The content of each panel is in panels/*.tex. The layout follows the
+%  Southampton Solent University brand guidelines; the required content
+%  follows the SEF639 Project Handbook (Poster Presentation) and the AE3
+%  assessment brief.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% 1. Draft or final, font, orientation
+%    draft: guidance boxes and a word count in the footer
+%    final: use this for printing and for the PDF upload to SOL
+% ---------------------------------------------------------------------
+\providecommand\reportmode{draft}            % draft | final
+\providecommand\fontstyle{brand}             % brand (Carlito) | classic
+\providecommand\posterorientation{landscape} % landscape | portrait
+
+\documentclass[fontsize=18pt]{scrartcl}  % body text 18pt on A2
+
+\input{setup/layout}
+
+% ---------------------------------------------------------------------
+% 2. Your details
+% ---------------------------------------------------------------------
+\studentname{Firstname Lastname}
+\award{BEng (Hons)}
+% Your course: keep exactly one of the following lines active
+\course{Mechanical Engineering}
+% \course{Electronic Engineering}
+% \course{Electronic Engineering (Apprenticeship)}
+% \course{Renewable Energy Engineering}
+\projecttitle{Design and Evaluation of a Low-Cost Data Logger for
+  Domestic Heating Systems}
+\supervisor{Dr Firstname Lastname}
+\academicyear{2026--27}
+
+% ---------------------------------------------------------------------
+% 3. Footer: acknowledgements, AI statement (required), QR code
+% ---------------------------------------------------------------------
+\acknowledgements{I thank \ldots\ for \ldots}
+% The Handbook requires a brief AI statement on the poster. For AE3 only
+% proofreading and data-analysis support are permitted (see the brief).
+\aistatement{No AI tools were used in the preparation of this poster.}
+% \aistatement{Grammarly was used for proofreading.}
+% Optional QR code, e.g. to a demonstration video (delete to hide):
+\qrlink{https://example.com/my-project-video}{Watch the demo}
+
+% Panel titles (change them if your project needs different headings)
+\paneltitle{intro}{Introduction and Aims}
+\paneltitle{method}{Methodology}
+\paneltitle{design}{Design and Implementation}
+\paneltitle{results}{Results}
+\paneltitle{conclusions}{Conclusions}
+\paneltitle{references}{References}
+
+\addbibresource{references.bib}
+
+% ---------------------------------------------------------------------
+% 4. Your own packages and commands go here
+% ---------------------------------------------------------------------
+
+
+\begin{document}
+\makeposter
+\end{document}
