@@ -1,7 +1,9 @@
-# latexmk configuration for the SEF639 templates (optional helper)
-#   latexmk                                       draft
+# latexmk configuration for the SEF639 templates
+#   latexmk                                       build main.pdf (draft)
+#   latexmk -pvc                                  rebuild on every save
 #   latexmk -usepretex='\def\reportmode{final}'   final version
-# Without latexmk, run:  lualatex main, biber main, lualatex main, lualatex main
+#   latexmk -c                                    remove auxiliary files
+# Without latexmk: lualatex main, biber main, lualatex main, lualatex main
 $pdf_mode = 4;                     # LuaLaTeX
 $lualatex = 'lualatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
 $bibtex_use = 2;                   # run biber and clean .bbl

@@ -37,12 +37,24 @@ Final Report and onto the poster.
 
 ### On your own computer
 
-Install a TeX distribution: TeX Live, MiKTeX or MacTeX. The templates only
-need **LuaLaTeX** and **Biber**, which come with all of them. No Perl,
-Python, Java or other tools are needed: the word count is done by LuaLaTeX
-itself, and the glossaries are sorted by LaTeX.
+Install a TeX distribution: TeX Live, MiKTeX or MacTeX. The templates need
+**LuaLaTeX** and **Biber**, which come with all of them. No Python, Java or
+other tools are needed: the word count is done by LuaLaTeX itself, and the
+glossaries are sorted by LaTeX.
 
-In the template folder, run (or let your editor run)
+**Recommended: latexmk.** `latexmk` runs LuaLaTeX and Biber as often as
+needed and reads its settings from the `latexmkrc` in each template folder.
+It is part of TeX Live and MacTeX; with MiKTeX on Windows it needs Perl
+(e.g. Strawberry Perl). In the template folder:
+
+```bash
+latexmk                                        # build main.pdf (draft)
+latexmk -pvc                                   # rebuild automatically on every save
+latexmk -usepretex='\def\reportmode{final}'    # final version, without editing main.tex
+latexmk -c                                     # remove the auxiliary files
+```
+
+**Without latexmk**, run the steps yourself (or let your editor run them):
 
 ```bash
 lualatex main
@@ -51,12 +63,14 @@ lualatex main
 lualatex main
 ```
 
-For the final version, set `\reportmode{final}` at the top of `main.tex`.
-If you have `latexmk` (part of TeX Live and MacTeX; on Windows with MiKTeX
-it needs Perl), `latexmk` does all of this in one step using the
-`latexmkrc` in the folder. Editors such as TeXstudio, VS Code (LaTeX
-Workshop) or TeXShop work as well; choose LuaLaTeX and Biber in their
-settings.
+For the final version, change `draft` to `final` in the `\reportmode` line at
+the top of `main.tex` (or use the `-usepretex` option above).
+
+**Editors.** VS Code with LaTeX Workshop uses latexmk by default and picks
+up the `latexmkrc`. In TeXstudio, set *Options → Configure TeXstudio →
+Build → Default Compiler* to *Latexmk*, or to *LuaLaTeX* with *Biber* as
+the bibliography tool. TeXShop: choose the *LuaLaTeX* engine or the
+*latexmk* engine script.
 
 ### Logo
 
