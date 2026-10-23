@@ -1,0 +1,385 @@
+% =====================================================================
+%  setup/preamble.tex -- packages and layout for the SEF639 Final Report
+%
+%  You should not need to edit this file. Your own details belong in
+%  main.tex. If you add packages, add them at the end of main.tex's
+%  preamble (before \begin{document}) so that updates to this template
+%  can be copied in without losing your changes.
+% =====================================================================
+\makeatletter
+
+% ---------------------------------------------------------------------
+% Draft or final mode (set \reportmode in main.tex)
+% ---------------------------------------------------------------------
+\newif\iffinalmode
+\def\fyp@finalstr{final}
+\ifx\reportmode\fyp@finalstr \finalmodetrue \fi
+
+% ---------------------------------------------------------------------
+% Language and fonts (LuaLaTeX)
+% ---------------------------------------------------------------------
+\usepackage{fontspec}            % Latin Modern by default; see README
+\usepackage{polyglossia}
+\setdefaultlanguage[variant=british]{english}
+\usepackage[autostyle]{csquotes}
+\usepackage{microtype}
+
+% ---------------------------------------------------------------------
+% Page layout
+% ---------------------------------------------------------------------
+\usepackage[a4paper, top=25mm, bottom=25mm, left=25mm, right=25mm,
+  includehead, includefoot, marginparwidth=20mm, marginparsep=2mm]{geometry}
+\usepackage{setspace}
+\setstretch{1.15}                % slightly more open than single spacing
+
+% ---------------------------------------------------------------------
+% Colours (Solent University brand guidelines)
+% ---------------------------------------------------------------------
+\usepackage[table]{xcolor}
+\definecolor{SolentRed}{RGB}{205,20,35}
+\definecolor{SkyBlue}{RGB}{1,195,222}
+\definecolor{SeaBlue}{RGB}{15,67,95}
+% risk ratings (risk register)
+\definecolor{RiskLow}{RGB}{198,239,206}
+\definecolor{RiskMedium}{RGB}{255,235,156}
+\definecolor{RiskHigh}{RGB}{252,192,140}
+\definecolor{RiskVeryHigh}{RGB}{255,150,150}
+
+% ---------------------------------------------------------------------
+% Figures, tables, lists, units, maths, code
+% ---------------------------------------------------------------------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs, tabularx, longtable, multirow, array}
+\usepackage{enumitem}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx}
+\sisetup{group-separator={,}, group-minimum-digits=4, per-mode=symbol}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage[en-GB]{datetime2}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc, fit, backgrounds,
+  shapes.geometric, shapes.misc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+\usepackage{pgfgantt}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+% ---------------------------------------------------------------------
+% Headers and footers: page number bottom centre (Handbook, App. A)
+% ---------------------------------------------------------------------
+\usepackage[headsepline=false]{scrlayer-scrpage}
+\clearpairofpagestyles
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+
+% ---------------------------------------------------------------------
+% Draft-mode helpers: todo notes, watermark, header stamp
+% ---------------------------------------------------------------------
+\iffinalmode
+  \usepackage[disable]{todonotes}
+\else
+  \usepackage[textsize=scriptsize, color=SkyBlue!30, bordercolor=SkyBlue]{todonotes}
+  % todo notes are not counted as words
+  \NewCommandCopy\fyp@todo\todo
+  \renewcommand\todo[2][]{\directlua{fyp_wc.paused = fyp_wc.paused + 1}%
+    \fyp@todo[#1]{#2}\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
+  \usepackage{draftwatermark}
+  \SetWatermarkText{DRAFT}
+  \SetWatermarkColor[gray]{0.94}
+  \SetWatermarkScale{1.2}
+  \ohead*{\scriptsize\textcolor{SolentRed}{\textbf{DRAFT}}\ compiled
+    \DTMnow\ \textbar\ main body: \fyp@lastwords\ words}
+\fi
+
+% ---------------------------------------------------------------------
+% References: Harvard Solent (Solent University's interpretation of
+% BS ISO 690), see https://libguides.solent.ac.uk/HarvardSolent
+% Same configuration as the SEF639 Project Handbook.
+% ---------------------------------------------------------------------
+\usepackage[
+  backend=biber,
+  style=ext-authoryear,
+  sorting=nyt,
+  maxbibnames=3, minbibnames=1,   % four or more authors -> et al.
+  maxcitenames=3, mincitenames=1,
+  giveninits=true,
+  uniquename=false, uniquelist=false,
+  dashed=false,
+  date=year,
+  urldate=long,
+  isbn=false, doi=false, eprint=false
+]{biblatex}
+
+% In-text: (Johns 2014) / Johns (2014); several sources separated by ';'
+\DeclareDelimFormat{nameyeardelim}{\addspace}
+\DeclareDelimFormat{finalnamedelim}{\addspace\bibstring{and}\space}
+\DeclareDelimFormat[bib]{finalnamedelim}{\addspace\bibstring{and}\space}
+\DeclareDelimFormat{multicitedelim}{\addsemicolon\space}
+% Reference list: JOHNS, R., 2014. \emph{Title}. 6th ed. London: Publisher
+\DeclareDelimFormat[bib]{nameyeardelim}{\addcomma\space}
+\DeclareFieldFormat{biblabeldate}{#1}
+\DeclareNameAlias{sortname}{family-given/given-family}
+\renewrobustcmd*{\bibinitdelim}{}
+\AtBeginBibliography{\renewcommand*{\mkbibnamefamily}[1]{\MakeUppercase{#1}}}
+\renewcommand*{\finentrypunct}{}
+\DeclareFieldFormat{editortype}{#1}
+% ... [viewed 8 October 2026]. Available from: URL
+\newcommand*{\solentmonth}[1]{\ifcase#1\or January\or February\or March\or
+  April\or May\or June\or July\or August\or September\or October\or
+  November\or December\fi}
+\DeclareFieldFormat{url}{Available from: \url{#1}}
+\renewbibmacro*{url+urldate}{%
+  \iffieldundef{url}{}{%
+    \iffieldundef{urlyear}{}{%
+      \setunit{\addspace}%
+      \printtext[brackets]{viewed\space\thefield{urlday}\space
+        \solentmonth{\thefield{urlmonth}}\space\thefield{urlyear}}}%
+    \setunit{\adddot\space}\printfield{url}}}
+% Split the list into 'References' (cited) and 'Bibliography' (consulted
+% but not cited -- add those with \nocite{key} in main.tex)
+\DeclareBibliographyCategory{cited}
+\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+
+% ---------------------------------------------------------------------
+% Cross-references and links
+% ---------------------------------------------------------------------
+\usepackage{xurl}
+\urlstyle{same}
+% Work-around for a varioref bug (v1.6i, 2026): define the language hook
+% before varioref loads. See https://github.com/latex3/latex2e/issues/2112
+\providecommand\extrasenglish{}
+\usepackage{varioref}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=\iffinalmode SeaBlue\else SolentRed\fi,
+  citecolor=SeaBlue,
+  urlcolor=SeaBlue,
+  breaklinks=true,
+  pdfdisplaydoctitle=true,
+  bookmarksnumbered=true
+}
+\usepackage[nameinlink]{cleveref}
+\crefname{chapter}{Chapter}{Chapters}
+\crefname{section}{Section}{Sections}
+\crefname{subsection}{Section}{Sections}
+\crefname{appendix}{Appendix}{Appendices}
+
+% ---------------------------------------------------------------------
+% Notation, abbreviations and glossary (entries in glossary-entries.tex)
+% ---------------------------------------------------------------------
+\usepackage[acronym, symbols, nonumberlist, nopostdot, nogroupskip]{glossaries}
+\makeglossaries
+
+% ---------------------------------------------------------------------
+% Headings required by the Handbook (Appendix A)
+% ---------------------------------------------------------------------
+\gappto\captionsenglish{%
+  \renewcommand\contentsname{CONTENTS}%
+  \renewcommand\listfigurename{FIGURES}%
+  \renewcommand\listtablename{TABLES}%
+  \renewcommand\bibname{References}}
+\setkomafont{disposition}{\normalcolor\sffamily\bfseries}
+\addtokomafont{chapter}{\color{SeaBlue}}
+
+% =====================================================================
+% Your details (set in main.tex)
+% =====================================================================
+\newcommand\studentname[1]{\gdef\fyp@student{#1}}
+\newcommand\studentid[1]{\gdef\fyp@studentid{#1}}
+\newcommand\award[1]{\gdef\fyp@award{#1}}
+\newcommand\course[1]{\gdef\fyp@course{#1}}
+\newcommand\projecttitle[1]{\gdef\fyp@title{#1}}
+\newcommand\supervisor[1]{\gdef\fyp@supervisor{#1}}
+\newcommand\academicyear[1]{\gdef\fyp@year{#1}}
+\newcommand\reportdate[1]{\gdef\fyp@date{#1}}
+\newcommand\wordtarget[1]{\gdef\fyp@target{#1}}
+\newif\ifwordcountontitle
+\studentname{Student Name}\studentid{00000000}\award{BEng (Hons)}
+\course{Course Name}\projecttitle{Project Title}\supervisor{Supervisor}
+\academicyear{2026--27}\reportdate{\DTMmonthname{\month}\ \the\year}
+\wordtarget{10000}
+
+\AtBeginDocument{\hypersetup{pdftitle={\fyp@title},
+  pdfauthor={\fyp@student}, pdfsubject={SEF639 Final Report}}}
+
+% =====================================================================
+% Main body and word count
+% =====================================================================
+\directlua{dofile(kpse.find_file("setup/wordcount.lua") or "setup/wordcount.lua")}
+\providecommand\fyp@lastwords{--}   % value from the previous run (.aux)
+
+% Headers and footers are built in the output routine: do not count them
+\newcommand\fyp@pause{\directlua{fyp_wc.paused = fyp_wc.paused + 1}}
+\newcommand\fyp@resume{\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
+\AtBeginDocument{\output=\expandafter{\expandafter\fyp@pause\the\output\fyp@resume}}
+
+% Remember chapter titles for the word-count report
+\pretocmd{\addchaptertocentry}%
+  {\protected@edef\fyp@tmp{#2}\expandafter\global\expandafter\let\csname fyp@chaptitle@#1\endcsname\fyp@tmp}{}{}
+
+\newcommand\startmainmatter{%
+  \clearpage\pagenumbering{arabic}% Introduction starts on page 1
+  \par\directlua{fyp_wc.active = true}}
+
+\newcommand\stopmainmatter{%
+  \par\directlua{fyp_wc.active = false}%
+  \edef\fyp@words{\directlua{tex.sprint(fyp_wc.total)}}%
+  \immediate\write\@mainaux{\gdef\string\fyp@lastwords{\fyp@words}}%
+  \typeout{^^J*** Main body word count: \fyp@words\space
+    (target \fyp@target) ***^^J}%
+  \ifnum\numexpr10*\fyp@words<\numexpr9*\fyp@target\relax
+    \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
+      more than 10\% below the target of \fyp@target}\fi
+  \ifnum\numexpr10*\fyp@words>\numexpr11*\fyp@target\relax
+    \PackageWarningNoLine{SEF639}{Main body has \fyp@words\space words,
+      more than 10\% above the target of \fyp@target}\fi}
+
+% Word-count report (draft mode only, printed after the appendices)
+\newcommand\FYPwcrow[2]{%
+  #1 & \ifcsname fyp@chaptitle@#1\endcsname
+         \csname fyp@chaptitle@#1\endcsname\fi & \num{#2}\\}
+\newcommand\wordcountreport{%
+  \iffinalmode\else
+  \clearpage
+  \addchap{Word Count Report (draft only)}
+  This page is only printed in draft mode. It counts the words of the main
+  body as typeset: body text, headings and list items. Captions, tables,
+  footnotes, equations, guidance boxes, front matter, references and
+  appendices are not counted. The Handbook expects the main body to be
+  within $\pm$10\% of the target.
+  \begin{center}
+  \begin{tabular}{rlr}
+    \toprule
+    & \textbf{Chapter} & \textbf{Words}\\ \midrule
+    \directlua{fyp_wc.report_rows()}
+    \midrule
+    & \textbf{Main body total} & \textbf{\num{\fyp@words}}\\
+    & Target ($\pm$10\%) & \num{\fyp@target}
+      (\num{\the\numexpr9*\fyp@target/10\relax}--\num{\the\numexpr11*\fyp@target/10\relax})\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \fi}
+
+% =====================================================================
+% Front and back matter helpers
+% =====================================================================
+\newcommand\printnotation{%
+  \printglossary[type=symbols, title=NOTATION, toctitle=Notation]%
+  \printglossary[type=\acronymtype, title=ABBREVIATIONS, toctitle=Abbreviations]%
+  \printglossary[title=GLOSSARY, toctitle=Glossary]}
+
+\newcommand\printreferences{%
+  \printbibliography[heading=bibintoc, title=References, category=cited]%
+  \printbibliography[heading=bibintoc, title=Bibliography, notcategory=cited]}
+
+% =====================================================================
+% Building blocks (see the example chapters for how to use them)
+% =====================================================================
+
+% Guidance boxes: shown in draft mode, removed completely in final mode.
+% Delete them as you write your own text.
+\iffinalmode
+  \NewDocumentEnvironment{guidance}{O{Guidance} +b}{}{}
+\else
+  \NewDocumentEnvironment{guidance}{O{Guidance}}
+    {\par\directlua{fyp_wc.paused = fyp_wc.paused + 1}%
+     \begin{tcolorbox}[enhanced, breakable, colback=SkyBlue!8,
+      colframe=SkyBlue, coltitle=SeaBlue, fonttitle=\sffamily\bfseries\small,
+      fontupper=\small, title={#1}, boxrule=0.6pt, arc=1mm,
+      before upper={\setlength{\parskip}{4pt}}]}
+    {\end{tcolorbox}\par\directlua{fyp_wc.paused = fyp_wc.paused - 1}}
+\fi
+
+% Grey placeholder box, e.g. for a missing figure or logo
+\newcommand\placeholder[2][\linewidth]{%
+  \begin{tcolorbox}[width=#1, colback=black!4, colframe=black!35,
+    boxrule=0.5pt, arc=0pt, halign=center, valign=center,
+    fontupper=\small\sffamily\color{black!60}, before skip=4pt, after skip=4pt]
+  #2\end{tcolorbox}}
+
+% Objectives O1, O2 ... that can be referenced with \cref
+\newlist{objectives}{enumerate}{1}
+\setlist[objectives]{label=\textbf{O\arabic*}, ref=O\arabic*, leftmargin=*}
+\crefname{objectivesi}{objective}{objectives}
+\Crefname{objectivesi}{Objective}{Objectives}
+
+% Requirements R1, R2 ... : use \req{req:label} in the first column of a
+% (non-tabularx) table; refer to them later with \cref{req:label}
+\newcounter{requirement}
+\renewcommand\therequirement{R\arabic{requirement}}
+\newcommand\req[1]{\refstepcounter{requirement}\label{#1}\textbf{\therequirement}}
+\crefname{requirement}{requirement}{requirements}
+\Crefname{requirement}{Requirement}{Requirements}
+
+% Test outcomes
+\newcommand\pass{\textcolor{green!45!black}{\textbf{Pass}}}
+\newcommand\fail{\textcolor{SolentRed}{\textbf{Fail}}}
+\newcommand\partpass{\textcolor{orange!80!black}{\textbf{Partial}}}
+
+% Risk register: \riskrating{likelihood 1-5}{severity 1-5}
+% prints the product and colours the table cell
+\newcommand\riskrating[2]{%
+  \edef\fyp@risk{\the\numexpr#1*#2\relax}%
+  \ifnum\fyp@risk<5 \cellcolor{RiskLow}\fyp@risk\ (Low)%
+  \else\ifnum\fyp@risk<10 \cellcolor{RiskMedium}\fyp@risk\ (Medium)%
+  \else\ifnum\fyp@risk<16 \cellcolor{RiskHigh}\fyp@risk\ (High)%
+  \else\cellcolor{RiskVeryHigh}\fyp@risk\ (Very high)\fi\fi\fi}
+
+% Weighted decision matrix (use a plain tabular, not tabularx):
+%   \resetscores{A,B,C}       at the start of the table
+%   \weight{0.3}              prints the weight of the current criterion
+%   \score{A}{4}              prints the score and adds weight x score to A
+%   \weightsum, \scoretotal{A} in the last row
+\newcommand\resetscores[1]{%
+  \gdef\fyp@wsum{0}\gdef\fyp@w{0}%
+  \@for\fyp@opt:=#1\do{\expandafter\gdef\csname fyp@tot@\fyp@opt\endcsname{0}}}
+\newcommand\weight[1]{\gdef\fyp@w{#1}\xdef\fyp@wsum{\fpeval{\fyp@wsum+#1}}#1}
+\newcommand\score[2]{#2\expandafter\xdef\csname fyp@tot@#1\endcsname
+  {\fpeval{\csname fyp@tot@#1\endcsname+\fyp@w*(#2)}}}
+\newcommand\scoretotal[1]{\fpeval{round(\csname fyp@tot@#1\endcsname,2)}}
+\newcommand\weightsum{\fpeval{round(\fyp@wsum,2)}%
+  \ifdim\fpeval{abs(\fyp@wsum-1)}pt>0.001pt
+    \ \textcolor{SolentRed}{(should be 1)}\fi}
+
+% TikZ styles for flowcharts (methodology, system diagrams)
+\tikzset{
+  fyp node/.style={draw=SeaBlue, thick, align=center, font=\small,
+    execute at begin node={\hyphenpenalty=10000},
+    minimum height=2.4em, inner sep=4pt},
+  fyp process/.style={fyp node, rectangle, fill=SkyBlue!12,
+    text width=9em},
+  fyp terminal/.style={fyp node, rounded rectangle, fill=SeaBlue!15,
+    text width=7em},
+  fyp decision/.style={fyp node, diamond, aspect=2.2, fill=SolentRed!8,
+    text width=6.5em, inner sep=1pt},
+  fyp io/.style={fyp node, trapezium, trapezium left angle=72,
+    trapezium right angle=108, trapezium stretches body,
+    fill=black!5, text width=8em},
+  fyp data/.style={fyp node, cylinder, shape border rotate=90,
+    aspect=0.15, fill=black!5, text width=6em},
+  fyp deliverable/.style={fyp node, rectangle, double, fill=SkyBlue!25,
+    text width=9em},
+  fyp arrow/.style={-{Stealth[length=2.5mm]}, thick, SeaBlue},
+  fyp group/.style={draw=black!35, dashed, rounded corners, inner sep=8pt,
+    fill=black!2}
+}
+
+% Code listings
+\lstdefinestyle{fyp}{
+  basicstyle=\ttfamily\footnotesize, numbers=left,
+  numberstyle=\tiny\color{black!50}, frame=single, rulecolor=\color{black!25},
+  keywordstyle=\color{SeaBlue}\bfseries, commentstyle=\color{green!40!black},
+  stringstyle=\color{SolentRed}, breaklines=true, showstringspaces=false,
+  captionpos=b, tabsize=2}
+\lstset{style=fyp}
+
+\makeatother

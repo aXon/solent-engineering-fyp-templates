@@ -1,0 +1,31 @@
+% =====================================================================
+%  Notation, abbreviations and glossary
+%  Only entries that you actually use in the text are printed.
+%
+%  Use in the text:
+%    \gls{pcb}       first use: "printed circuit board (PCB)", then "PCB"
+%    \gls{sym:T}     prints the symbol
+%    \gls{fos}       glossary term
+% =====================================================================
+
+% ---- Abbreviations ---------------------------------------------------
+\newacronym{pcb}{PCB}{printed circuit board}
+\newacronym{adc}{ADC}{analogue-to-digital converter}
+\newacronym{cad}{CAD}{computer-aided design}
+\newacronym{fea}{FEA}{finite element analysis}
+\newacronym{mae}{MAE}{mean absolute error}
+\newacronym{wbs}{WBS}{work breakdown structure}
+
+% ---- Notation (symbols) ---------------------------------------------
+% sort= controls the order in the NOTATION list
+\newglossaryentry{sym:T}{type=symbols, sort=T, name={\ensuremath{T}},
+  description={temperature, \si{\celsius}}}
+\newglossaryentry{sym:t}{type=symbols, sort=t, name={\ensuremath{t}},
+  description={time, \si{\second}}}
+\newglossaryentry{sym:tau}{type=symbols, sort=tau, name={\ensuremath{\tau}},
+  description={time constant, \si{\second}}}
+
+% ---- Glossary of terms ------------------------------------------------
+\newglossaryentry{fos}{name={factor of safety},
+  description={ratio of the failure load of a component to the maximum
+  load it is expected to carry in service}}

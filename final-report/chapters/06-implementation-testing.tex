@@ -1,0 +1,61 @@
+\chapter{Implementation and Testing}
+\label{ch:implementation}
+
+\begin{guidance}[What this chapter does]
+Describes how the selected solution was built, modelled or carried out, and
+how it was tested. Give enough detail (apparatus, settings, procedures) for
+another engineer to repeat the work. Large drawings, full code and data
+belong in the digital evidence (\cref{app:digital}), not in the text.
+Typical length: 1,500--2,000 words.
+\end{guidance}
+
+\section{Implementation}
+\label{sec:implementation}
+
+\begin{guidance}
+Hardware, software, models or experiments, in the order they were built.
+Short code extracts are fine. Mark AI-generated parts in code comments, as
+required by the Handbook, and declare them in the AI statement.
+\end{guidance}
+
+\begin{lstlisting}[language=Python, caption={Main logging loop (extract)}, label={lst:logger}]
+import time
+from sensor import read_temperature   # own driver, see digital evidence
+
+# Lines 3-6 generated with GitHub Copilot, reviewed by the author
+def log_sample(file, interval_s):
+    t = read_temperature()
+    file.write(f"{time.time():.0f},{t:.3f}\n")
+    time.sleep(interval_s)
+\end{lstlisting}
+
+\section{Test plan and procedure}
+\label{sec:testing}
+
+\begin{guidance}
+Every test should verify one or more requirements from
+\cref{tab:requirements}. Refer to them with \verb|\cref{req:...}| so that the
+link from specification to test is explicit. Describe the equipment and
+procedure; include calibration and uncertainty where relevant.
+\end{guidance}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Test plan and summary of results (example)}
+  \label{tab:tests}
+  \small
+  \begin{tabular}{p{0.06\linewidth}p{0.12\linewidth}p{0.36\linewidth}p{0.2\linewidth}c}
+    \toprule
+    Test & Requirement & Method & Pass criterion & Result \\
+    \midrule
+    T1 & \ref{req:accuracy} & Logged against a calibrated reference in an
+      environmental chamber at \SIlist{5;20;35}{\celsius}
+      & Error $\leq \SI{0.5}{\celsius}$ & \pass \\
+    T2 & \ref{req:interval} & Set intervals of 1, 5 and \SI{60}{\minute};
+      check timestamps over \SI{24}{\hour} & Deviation $< \SI{1}{\second}$ & \pass \\
+    T3 & \ref{req:battery} & Measured average current; calculated battery life
+      & $\geq 30$ days & \partpass \\
+    T4 & \ref{req:cost} & Bill of materials & < £40 & \fail \\
+    \bottomrule
+  \end{tabular}
+\end{table}

@@ -1,0 +1,32 @@
+\chapter{Health, Safety and Ethics}
+\label{app:hse}
+
+\begin{guidance}[Required evidence (Handbook, Ethics and Health \& Safety)]
+The Final Report submission must include:
+\begin{itemize}
+  \item the DSE self-assessment using the HSE checklist \parencite{hse2013dse};
+  \item any GRA01 risk assessments for practical work, approved by your
+    supervisor and the technical staff;
+  \item the ethics release from the Solent Ethics App, and the Full Ethical
+    Review approval if one was needed.
+\end{itemize}
+Save the PDFs in \texttt{evidence/} with the file names below; they are
+included automatically.
+\end{guidance}
+
+\section{Display screen equipment self-assessment}
+\IfFileExists{evidence/dse-assessment.pdf}
+  {\includepdf[pages=-, scale=0.85, pagecommand={}]{evidence/dse-assessment.pdf}}
+  {\placeholder{DSE self-assessment: save it as \texttt{evidence/dse-assessment.pdf}}}
+
+\section{Risk assessment (GRA01)}
+\IfFileExists{evidence/gra01.pdf}
+  {\includepdf[pages=-, scale=0.85, pagecommand={}]{evidence/gra01.pdf}}
+  {\placeholder{GRA01 risk assessment (if practical work was carried out):
+    save it as \texttt{evidence/gra01.pdf}}}
+
+\section{Ethics release}
+\IfFileExists{evidence/ethics-release.pdf}
+  {\includepdf[pages=-, scale=0.85, pagecommand={}]{evidence/ethics-release.pdf}}
+  {\placeholder{Ethics release from the Solent Ethics App: save it as
+    \texttt{evidence/ethics-release.pdf}}}

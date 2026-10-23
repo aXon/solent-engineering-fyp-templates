@@ -1,0 +1,60 @@
+name: Build templates
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  final-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build draft
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: final-report
+          latexmk_use_lualatex: true
+          args: -interaction=nonstopmode -file-line-error -jobname=final-report-draft
+
+      - name: Build final
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: final-report
+          latexmk_use_lualatex: true
+          args: >-
+            -interaction=nonstopmode -file-line-error -jobname=final-report-final
+            -usepretex=\def\reportmode{final}
+
+      - name: Word count
+        run: grep -h "Main body word count" final-report/final-report-final.log || true
+
+      - name: Zip template for Overleaf
+        run: |
+          cd final-report
+          zip -r ../final-report-template.zip . \
+            -x '*.aux' '*.log' '*.fls' '*.fdb_latexmk' '*.bbl' '*.bcf' '*.blg' \
+               '*.run.xml' '*.synctex.gz' '*.toc' '*.lof' '*.lot' '*.gl?' '*.ac?' \
+               '*.al?' '*.sl?' '*.ist' '*.out' '*.pdf'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-report
+          path: |
+            final-report/final-report-draft.pdf
+            final-report/final-report-final.pdf
+            final-report-template.zip
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            final-report/final-report-draft.pdf
+            final-report/final-report-final.pdf
+            final-report-template.zip

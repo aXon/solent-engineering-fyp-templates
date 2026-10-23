@@ -1,0 +1,99 @@
+% !TeX program = lualatex
+% =====================================================================
+%  SEF639 Final Year Project -- Final Report (AE2) template
+%  Solent University, School of Technology and Maritime Industries
+%
+%  Build:     latexmk            (uses latexmkrc in this folder)
+%  Overleaf:  Menu -> Settings -> Compiler: LuaLaTeX
+%
+%  Read README.md first. The structure follows Appendix A of the
+%  SEF639 Project Handbook; agree any changes with your supervisor.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% 1. Draft or final?
+%    draft: guidance boxes, \todo notes, DRAFT watermark and stamp,
+%           word-count report at the end
+%    final: all of that is switched off -- use this for submission
+% ---------------------------------------------------------------------
+\providecommand\reportmode{draft}   % draft | final
+
+\documentclass[a4paper, 11pt, oneside, chapterprefix=true,
+  numbers=noenddot, listof=totoc, bibliography=totoc]{scrreprt}
+
+\input{setup/preamble}
+
+% ---------------------------------------------------------------------
+% 2. Your details (these fill the title page and the PDF properties)
+% ---------------------------------------------------------------------
+\studentname{Firstname Lastname}
+\studentid{12345678}
+\award{BEng (Hons)}
+\course{Mechanical Engineering}
+%   Electronic Engineering
+%   Electronic Engineering (Apprenticeship)
+%   Mechanical Engineering
+%   Renewable Energy Engineering
+\projecttitle{Design and Evaluation of a Low-Cost Data Logger for
+  Domestic Heating Systems}
+\supervisor{Dr Firstname Lastname}
+\academicyear{2026--27}
+\reportdate{April 2027}            % month and year the report was created
+
+\wordtarget{10000}                 % main body; Handbook allows +/-10%
+% \wordcountontitletrue            % uncomment to show the count on the title page
+
+% ---------------------------------------------------------------------
+% 3. References, abbreviations and symbols
+% ---------------------------------------------------------------------
+\addbibresource{references.bib}
+\input{frontmatter/glossary-entries}
+
+% Sources you consulted but did not cite go into the 'Bibliography':
+\nocite{dieter2013}
+
+% ---------------------------------------------------------------------
+% 4. Your own packages and commands go here
+% ---------------------------------------------------------------------
+
+
+\begin{document}
+%TC:ignore
+% ------------------------------- front matter (roman page numbers) --
+\input{frontmatter/titlepage}
+\pagenumbering{roman}
+\input{frontmatter/acknowledgements}
+\input{frontmatter/ai-declaration}
+% \input{frontmatter/contribution}   % collaborative or continued projects only
+\input{frontmatter/abstract}
+\tableofcontents
+\listoffigures                       % required with more than five figures
+\listoftables                        % required with more than five tables
+\printnotation
+%TC:endignore
+
+% ------------------------------- main body (counted, page 1 onwards) --
+\startmainmatter
+\include{chapters/01-introduction}
+\include{chapters/02-literature-review}
+\include{chapters/03-methodology}
+\include{chapters/04-specification}
+\include{chapters/05-design-development}
+\include{chapters/06-implementation-testing}
+\include{chapters/07-issues}
+\include{chapters/08-results}
+\include{chapters/09-evaluation}
+\include{chapters/10-conclusions}
+\include{chapters/11-recommendations}
+\stopmainmatter
+
+%TC:ignore
+% ------------------------------- back matter (not counted) -----------
+\printreferences
+\appendix
+\include{appendices/a-project-management}
+\include{appendices/b-health-safety-ethics}
+\include{appendices/c-digital-evidence}
+\wordcountreport                     % draft mode only
+%TC:endignore
+\end{document}

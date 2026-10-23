@@ -1,0 +1,98 @@
+\chapter{Introduction}
+\label{ch:intro}
+
+\begin{guidance}[What this chapter does]
+Sets the project in context and leads the reader to clearly stated aims and
+objectives. By the end of this chapter the marker should know
+\emph{what} problem you tackled, \emph{why} it matters (technically,
+commercially, for users or society) and \emph{how} the report is organised.
+Typical length: 800--1,200 words.
+
+Write the report in the past tense for the work you carried out (\enquote{The
+prototype was tested \ldots}) and in the present tense for what the report
+contains (\enquote{\Cref{ch:results} presents \ldots}).
+\end{guidance}
+
+\section{Background}
+\label{sec:background}
+
+\begin{guidance}
+Introduce the subject area and the problem. Support claims with references,
+for example \textcite{engc2020ahep} or \parencite{cross2008}. Include
+commercial considerations where relevant: who would use or buy the
+solution, and what it would replace.
+\end{guidance}
+
+Optimisation of energy use in residential homes is an active area of
+research \parencite{bausch2014}. \todo{Replace with your own background.}
+
+\section{Problem statement}
+\label{sec:problem}
+
+\begin{guidance}
+One or two paragraphs that end in a precise statement of the problem. Some
+projects frame this as a single research question, for example:
+\begin{quote}
+How can complicated real-world applications be built with an easy way of
+programming microcontrollers?
+\end{quote}
+(from an engineering diploma thesis, University of Portsmouth, 2008).
+\end{guidance}
+
+\section{Aim and objectives}
+\label{sec:objectives}
+
+\begin{guidance}
+\textbf{One aim}: the overall outcome of the project.
+\textbf{Several objectives}: specific, measurable steps that together achieve
+the aim. Each objective should start with a verb and be checkable at the end
+of the project. You will come back to every objective in
+\cref{ch:conclusions}, so number them with the \texttt{objectives} list and
+refer to them with \verb|\cref{obj:...}|.
+
+Example taken from a PhD thesis \parencite{bausch2014}:
+\emph{Aim}: to create a prediction model for inside air temperatures in a
+vacant residential home that uses environmental and experimental data from
+disparate sources. \emph{Objectives}: to create a system that collects data
+from local, remote and aggregated sensors; to create prediction models from
+historical data; \ldots
+\end{guidance}
+
+The aim of this project was to \ldots
+
+The objectives were:
+\begin{objectives}
+  \item\label{obj:review} To review existing solutions and the relevant
+    literature to establish the requirements for \ldots
+  \item\label{obj:spec} To produce a product design specification \ldots
+  \item\label{obj:design} To generate and evaluate candidate solutions and
+    select the most suitable one using a structured method.
+  \item\label{obj:build} To implement and test a prototype \ldots
+  \item\label{obj:evaluate} To evaluate the prototype against the
+    specification and the project process against the plan.
+\end{objectives}
+
+\section{Scope and constraints}
+\label{sec:scope}
+
+\begin{guidance}
+What is in, what is out, and why. Constraints include budget, time,
+equipment, safety, standards and access to data.
+\end{guidance}
+
+\section{Structure of the report}
+\label{sec:structure}
+
+\begin{guidance}
+One or two sentences per chapter. Use \verb|\cref| so that the numbers update
+automatically.
+\end{guidance}
+
+\Cref{ch:literature} reviews the literature and existing products.
+\Cref{ch:methodology} describes the project methodology and plan, and
+\cref{ch:specification} the product design specification. \Cref{ch:design}
+develops and evaluates candidate solutions. \Cref{ch:implementation}
+describes the implementation and testing, \cref{ch:issues} the issues that
+arose, and \cref{ch:results} the results. \Cref{ch:evaluation} evaluates the
+product and the process, \cref{ch:conclusions} draws conclusions against the
+objectives, and \cref{ch:recommendations} makes recommendations.

@@ -1,0 +1,36 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.lol
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.slo
+*.sls
+*.slg
+*.ist
+*.tdo
+*-SAVE-ERROR
+main.pdf
+
+# the logo is distributed via SOL, not via this repository
+figures/solent-logo.*
+
+# editors / OS
+.DS_Store
+.vscode/
+*.swp

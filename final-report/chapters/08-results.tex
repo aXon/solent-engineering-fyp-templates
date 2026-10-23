@@ -1,0 +1,47 @@
+\chapter{Results}
+\label{ch:results}
+
+\begin{guidance}[What this chapter does]
+Presents the results objectively, without yet judging them (that is
+\cref{ch:evaluation}). Use figures and tables, label axes with quantities and
+units, and refer to every figure in the text. State uncertainties. Typical
+length: 800--1,200 words.
+
+Plots are best made directly from your data with \texttt{pgfplots}, as in
+\cref{fig:cooling}: the figure then updates when the CSV file in
+\texttt{data/} changes, and the fonts match the report. Exported images
+(PDF or PNG from MATLAB, Python, Excel) are also fine; save them in
+\texttt{figures/}.
+\end{guidance}
+
+\section{Temperature accuracy (test T1)}
+\label{sec:res-accuracy}
+
+\Cref{fig:cooling} compares the logged temperature with the reference
+during a cooling test. The \gls{mae} over the test was \SI{0.21}{\celsius},
+within the limit of \cref{req:accuracy}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.85\linewidth, height=6cm,
+        xlabel={Time $t$ in \si{\minute}},
+        ylabel={Temperature $T$ in \si{\celsius}},
+        grid=major, grid style={black!10},
+        legend pos=north east, legend cell align=left,
+        every axis plot/.append style={thick}]
+      \addplot[SeaBlue, mark=*, mark size=1.2pt]
+        table[col sep=comma, x=time_min, y=logger_C] {data/cooling-test.csv};
+      \addlegendentry{Data logger}
+      \addplot[SolentRed, dashed]
+        table[col sep=comma, x=time_min, y=reference_C] {data/cooling-test.csv};
+      \addlegendentry{Calibrated reference}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Logged and reference temperature during the cooling test T1 (example data)}
+  \label{fig:cooling}
+\end{figure}
+
+\section{Battery life (test T3)}
+\label{sec:res-battery}

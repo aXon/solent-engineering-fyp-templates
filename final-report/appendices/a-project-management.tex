@@ -1,0 +1,18 @@
+\chapter{Project Management Evidence}
+\label{app:project-management}
+
+\begin{guidance}
+Full-size Gantt chart (original plan and final update), the complete risk
+register and, if useful, a summary of supervisor meetings with dates and
+agreed actions taken from the logbook. Appendices are not marked as part of
+the main body: everything the marker needs to follow the argument must be in
+the chapters.
+
+To include a chart exported from other software (Excel, MS Project) as a
+landscape page, use for example
+\verb|\includepdf[pages=-, landscape]{evidence/gantt.pdf}|.
+\end{guidance}
+
+\IfFileExists{evidence/gantt.pdf}
+  {\includepdf[pages=-, landscape, scale=0.9]{evidence/gantt.pdf}}
+  {\placeholder{Full Gantt chart: save it as \texttt{evidence/gantt.pdf}}}

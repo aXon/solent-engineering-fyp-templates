@@ -1,0 +1,64 @@
+\chapter{Product Design Specification}
+\label{ch:specification}
+
+\begin{guidance}[What this chapter does]
+The specification is the control document for the whole design: it defines
+what the product must do, within which constraints, and how success will be
+tested. It should not predict the design. Use short, definitive statements
+and quantify every parameter you can. Show how the specification was
+justified (literature, market research, user survey) and how it was reviewed
+and updated since the Progress Report. Typical length: 600--1,000 words.
+
+Number every requirement with \verb|\req{req:label}| in the first column. The
+IDs R1, R2 \ldots\ are generated automatically and can be referenced
+anywhere with \verb|\cref{req:label}|, for example in the test table of
+\cref{ch:implementation} and the evaluation in \cref{ch:evaluation}. This
+traceability from requirement to test to evaluation is exactly what the
+markers look for.
+
+Further reading: \textcite{cross2008}, \textcite{ulrich2012}; on writing
+testable requirements: \textcite{dick2017}.
+\end{guidance}
+
+\section{Sources of the requirements}
+\label{sec:spec-sources}
+
+\section{Requirements}
+\label{sec:requirements}
+
+\Cref{tab:requirements} lists the requirements. Requirements marked
+\enquote{D} (demand) must be met; \enquote{W} (wish) are desirable.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Product design specification (example)}
+  \label{tab:requirements}
+  \small
+  \begin{tabular}{p{0.06\linewidth}p{0.14\linewidth}p{0.33\linewidth}cp{0.2\linewidth}}
+    \toprule
+    ID & Category & Requirement & D/W & Verification \\
+    \midrule
+    \req{req:accuracy} & Performance & Temperature measured with an accuracy
+      of $\pm\SI{0.5}{\celsius}$ between \SIrange{0}{40}{\celsius}
+      & D & Comparison with a calibrated reference \\
+    \req{req:interval} & Performance & Logging interval adjustable from
+      \SIrange{1}{60}{\minute} & D & Functional test \\
+    \req{req:battery} & Power & Battery life of at least 30 days at a
+      \SI{5}{\minute} interval & D & Measured current, calculation \\
+    \req{req:cost} & Cost & Component cost below £40 per unit
+      & D & Bill of materials \\
+    \req{req:size} & Size & Fits within a $\SI{80}{\milli\metre} \times
+      \SI{50}{\milli\metre} \times \SI{25}{\milli\metre}$ enclosure
+      & W & Measurement \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Changes since the Progress Report}
+\label{sec:spec-changes}
+
+\begin{guidance}
+Which requirements changed, why, and when (refer to the logbook entry).
+For example: \enquote{\Cref{req:battery} was relaxed from 60 to 30 days after
+the current measurements in week 18 (logbook, p.~42).}
+\end{guidance}

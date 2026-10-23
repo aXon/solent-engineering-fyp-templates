@@ -1,0 +1,91 @@
+\chapter{Design Development}
+\label{ch:design}
+
+\begin{guidance}[What this chapter does]
+Generates candidate solutions, evaluates them against criteria derived from
+the specification, and justifies the chosen solution. The Handbook also asks
+you to consider the environmental and societal impact of the solution
+(learning outcome R3). Generate several concepts -- a single concept is
+usually a weak point. Typical length: 1,200--1,800 words.
+
+Methods for generating and evaluating concepts: \textcite{cross2008},
+\textcite{dym2009}; concept selection matrices: \textcite{ulrich2012}.
+\end{guidance}
+
+\section{Candidate solutions}
+\label{sec:concepts}
+
+\begin{guidance}
+Sketches or block diagrams with a short description of each concept and the
+enabling technologies. Keep them at the same level of detail so that the
+comparison is fair.
+\end{guidance}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[b]{0.32\linewidth}
+    \placeholder{Concept A sketch}
+    \caption{Concept A}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\linewidth}
+    \placeholder{Concept B sketch}
+    \caption{Concept B}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\linewidth}
+    \placeholder{Concept C sketch}
+    \caption{Concept C}
+  \end{subfigure}
+  \caption{Candidate solutions (replace the placeholders with your sketches)}
+  \label{fig:concepts}
+\end{figure}
+
+\section{Options analysis}
+\label{sec:options}
+
+\begin{guidance}
+Derive the criteria from the specification, justify each weight, score each
+concept (e.g.\ 1--5) and compare the weighted totals. The macros below do the
+arithmetic: \verb|\resetscores{A,B,C}| at the start, \verb|\weight{...}| for
+each criterion, \verb|\score{A}{...}| for each concept and
+\verb|\weightsum| and \verb|\scoretotal{A}| in the last row. Use a plain
+\texttt{tabular} here, not \texttt{tabularx}. Discuss the result: is the
+winner clear, and how sensitive is it to the weights?
+\end{guidance}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Weighted decision matrix (scores 1--5, example)}
+  \label{tab:decision}
+  \resetscores{A,B,C}
+  \begin{tabular}{llccc}
+    \toprule
+    Criterion (requirement) & Weight & Concept A & Concept B & Concept C \\
+    \midrule
+    Accuracy (\ref{req:accuracy})    & \weight{0.30} & \score{A}{4} & \score{B}{5} & \score{C}{3} \\
+    Battery life (\ref{req:battery}) & \weight{0.25} & \score{A}{3} & \score{B}{4} & \score{C}{5} \\
+    Cost (\ref{req:cost})            & \weight{0.25} & \score{A}{5} & \score{B}{2} & \score{C}{4} \\
+    Size (\ref{req:size})            & \weight{0.10} & \score{A}{3} & \score{B}{3} & \score{C}{4} \\
+    Ease of manufacture               & \weight{0.10} & \score{A}{4} & \score{B}{3} & \score{C}{3} \\
+    \midrule
+    \textbf{Weighted total} & \weightsum & \textbf{\scoretotal{A}} & \textbf{\scoretotal{B}} & \textbf{\scoretotal{C}} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Selected solution}
+\label{sec:selected}
+
+\begin{guidance}
+Justify the choice with reference to the matrix, the specification and the
+objectives. Then describe the chosen design in enough detail for the
+implementation chapter: system architecture, key calculations, component
+selection.
+\end{guidance}
+
+\section{Environmental and societal impact}
+\label{sec:impact}
+
+\begin{guidance}
+Materials, energy use, end of life and recyclability, safety of users,
+accessibility, sustainability; how the design minimises adverse effects.
+\end{guidance}

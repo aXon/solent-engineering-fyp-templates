@@ -1,0 +1,48 @@
+% =====================================================================
+%  Title page -- layout from Appendix E of the SEF639 Project Handbook
+%  The content is filled in from the details in main.tex.
+%
+%  Logo: the Solent University logo is not part of this template. Download
+%  it from the SEF639 module page on SOL and save it as
+%  figures/solent-logo.pdf (or .png). Until then a placeholder is shown.
+% =====================================================================
+\makeatletter
+\begin{titlepage}
+  \centering
+  \IfFileExists{figures/solent-logo.pdf}{\includegraphics[width=0.3\linewidth]{solent-logo}}{%
+  \IfFileExists{figures/solent-logo.png}{\includegraphics[width=0.3\linewidth]{solent-logo}}{%
+    {\Large\sffamily\bfseries Solent University\par}
+    \placeholder[0.6\linewidth]{Logo: download it from the SEF639 module page
+      on SOL and save it as \texttt{figures/solent-logo.pdf}}}}
+  \vspace*{0.08\textheight}
+
+  {\Large School of Technology and Maritime Industries\par}
+  \vspace{0.04\textheight}
+  {\color{SolentRed}\Huge\sffamily\bfseries \fyp@award\ \fyp@course\par}
+  \vspace{0.08\textheight}
+
+  {\Large
+  \begin{tabular}{rl}
+    Academic Year: & \fyp@year\\[2pt]
+    Student:       & \fyp@student\\[2pt]
+    Student ID:    & \fyp@studentid\\
+  \end{tabular}\par}
+  \vspace{0.05\textheight}
+  {\LARGE\sffamily\bfseries\color{SeaBlue} \fyp@title\par}
+  \vfill
+
+  {\Large Supervisor: \fyp@supervisor\par}
+  \vspace{4pt}
+  {\Large Date: \fyp@date\par}
+  \vfill
+
+  {\large SEF639 Final Year Project -- Final Report\par}
+  \ifwordcountontitle
+    {\normalsize Word count (main body): \fyp@lastwords\par}
+  \else\iffinalmode\else
+    \vspace{6pt}
+    {\small\color{SolentRed} DRAFT \textbar\ main body: \fyp@lastwords\ words
+      (target \fyp@target\ $\pm$10\%)\par}
+  \fi\fi
+\end{titlepage}
+\makeatother

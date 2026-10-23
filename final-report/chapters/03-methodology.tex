@@ -1,0 +1,150 @@
+\chapter{Project Methodology}
+\label{ch:methodology}
+
+\begin{guidance}[What this chapter does]
+Explains \emph{how} you ran the project: the approach for each stage, the
+tools and methods you chose and why, and how you planned, monitored and
+controlled the work. The Handbook asks for a flowchart showing the flow of
+information across the main project stages, and for the Gantt chart and
+risk analysis. Remember: the process is assessed as heavily as the product.
+Typical length: 800--1,200 words.
+\end{guidance}
+
+\section{Methodology overview}
+\label{sec:method-overview}
+
+\Cref{fig:methodology} shows the stages of the project and the information
+passed between them.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[node distance=7mm and 12mm]
+    \node[fyp terminal] (start) {Project proposal};
+    \node[fyp process, below=of start] (lit) {Literature review and market research};
+    \node[fyp deliverable, below=of lit] (spec) {Product design specification};
+    \node[fyp process, below=of spec] (concepts) {Generate candidate solutions};
+    \node[fyp decision, below=of concepts] (select) {Meets specification?};
+    \node[fyp process, right=of select] (build) {Implement prototype};
+    \node[fyp process, above=of build] (test) {Test against requirements};
+    \node[fyp decision, above=of test] (ok) {All tests passed?};
+    \node[fyp terminal, above=of ok] (eval) {Evaluation and report};
+    \node[fyp data, left=of lit] (log) {Logbook and project folder};
+
+    \draw[fyp arrow] (start) -- (lit);
+    \draw[fyp arrow] (lit) -- (spec);
+    \draw[fyp arrow] (spec) -- (concepts);
+    \draw[fyp arrow] (concepts) -- (select);
+    \draw[fyp arrow] (select) -- node[above, font=\scriptsize]{yes} (build);
+    \draw[fyp arrow] (select.west) -- ++(-6mm,0) |- node[pos=0.25, left, font=\scriptsize]{no} (concepts.west);
+    \draw[fyp arrow] (build) -- (test);
+    \draw[fyp arrow] (test) -- (ok);
+    \draw[fyp arrow] (ok) -- node[right, font=\scriptsize]{yes} (eval);
+    \draw[fyp arrow] (ok.east) -- ++(6mm,0) |- node[pos=0.25, right, font=\scriptsize]{no} (build.east);
+    \draw[fyp arrow, dashed] (log) -- (lit);
+  \end{tikzpicture}
+  \caption{Project methodology and flow of information between stages (example)}
+  \label{fig:methodology}
+\end{figure}
+
+\begin{guidance}
+Describe each stage of the flowchart and justify the chosen methods, tools
+and techniques with references or your own trials. Draw your own flowchart
+with the styles \texttt{fyp process}, \texttt{fyp decision},
+\texttt{fyp terminal}, \texttt{fyp io}, \texttt{fyp data},
+\texttt{fyp deliverable} and \texttt{fyp arrow} defined in
+\texttt{setup/preamble.tex}.
+\end{guidance}
+
+\section{Project plan}
+\label{sec:plan}
+
+\begin{guidance}
+Present the plan as a Gantt chart with work breakdown structure (WBS)
+numbers that match your logbook entries. Show the original plan and the
+actual progress so that the marker can see how you monitored and controlled
+the project. A small chart can sit here; a full-size chart belongs in
+\cref{app:project-management}. \Cref{fig:gantt-summary} shows planned
+(grey) and actual (blue) durations.
+\end{guidance}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{ganttchart}[
+      x unit=0.38cm, y unit chart=0.55cm, y unit title=0.55cm,
+      vgrid={*1{black!8, line width=0.3pt}}, hgrid,
+      title label font=\scriptsize, bar label font=\scriptsize,
+      title/.style={fill=SeaBlue!12, draw=SeaBlue!40},
+      bar/.style={fill=black!25, draw=none}, bar height=0.35,
+      bar top shift=0.1, bar label node/.append style={align=left},
+      milestone/.style={fill=SolentRed, draw=none},
+      milestone label font=\scriptsize\itshape
+    ]{1}{30}
+    \gantttitle{Semester 1 (weeks)}{12}
+    \gantttitle{Break}{3}
+    \gantttitle{Semester 2 (weeks)}{15}\\
+    \gantttitlelist{1,...,12}{1}
+    \gantttitle{}{3}
+    \gantttitlelist{1,...,15}{1}\\
+    \ganttbar{WBS 1 Proposal}{1}{2}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{1}{3}\\[grid]
+    \ganttbar{WBS 2 Research \& specification}{3}{9}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{3}{10}\\[grid]
+    \ganttbar{WBS 3 Concept design}{8}{12}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{9}{12}\\[grid]
+    \ganttmilestone{AE1 Progress Report}{12}\\
+    \ganttbar{WBS 4 Implementation}{16}{24}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{16}{26}\\[grid]
+    \ganttbar{WBS 5 Testing}{22}{26}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{24}{27}\\[grid]
+    \ganttbar{WBS 6 Final report}{24}{29}
+      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{25}{29}\\[grid]
+    \ganttmilestone{AE2 Final Report}{29}
+  \end{ganttchart}
+  \caption{Summary project plan: planned (grey) and actual (blue) durations (example)}
+  \label{fig:gantt-summary}
+\end{figure}
+
+\section{Risk management}
+\label{sec:risk}
+
+\begin{guidance}
+Project risks (technical, resources, time, skills, equipment) in a risk
+register: likelihood and severity on a scale of 1--5 (Very Unlikely to Very
+Likely; Negligible to Catastrophic), risk rating = likelihood
+$\times$ severity, and mitigation. The macro \verb|\riskrating{L}{S}|
+calculates and colours the rating. Health and safety hazards are assessed
+separately in a GRA01 form (\cref{app:hse}). Principles: BS ISO 31000
+\parencite{bsi2018risk}.
+\end{guidance}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Extract from the project risk register (example)}
+  \label{tab:risk}
+  \small
+  \begin{tabular}{p{0.05\linewidth}p{0.3\linewidth}ccp{0.14\linewidth}p{0.25\linewidth}}
+    \toprule
+    ID & Risk & L & S & Rating & Mitigation \\
+    \midrule
+    1 & Sensor delivery delayed by more than two weeks & 3 & 3 & \riskrating{3}{3}
+      & Order in week 4; identify an alternative supplier \\
+    2 & Laboratory access limited during assessment weeks & 2 & 2 & \riskrating{2}{2}
+      & Book sessions in advance \\
+    3 & Prototype damaged during testing & 2 & 4 & \riskrating{2}{4}
+      & Spare components; test at reduced load first \\
+    4 & Final report underestimated & 4 & 4 & \riskrating{4}{4}
+      & Start writing in Semester 2, week 6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Ethics, health and safety}
+\label{sec:ethics}
+
+\begin{guidance}
+Summarise the ethics release (Solent Ethics App), the DSE self-assessment and
+any GRA01 risk assessments, and refer to the evidence in \cref{app:hse}.
+Mention any ethical considerations, for example a user survey, data
+protection or the Engineering Council Statement of Ethical Principles
+\parencite{engc2026sep}.
+\end{guidance}
