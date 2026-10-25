@@ -441,11 +441,32 @@
 \fi
 
 % Grey placeholder box, e.g. for a missing figure or logo
+% (in final mode a placeholder that is still there causes a warning)
 \newcommand\placeholder[2][\linewidth]{%
+  \iffinalmode\PackageWarning{SEF639}{A placeholder box is still in the
+    final version. Replace it with your own content}\fi
   \begin{tcolorbox}[width=#1, colback=black!10, colframe=black!40,
     boxrule=0.5pt, arc=0pt, halign=center, valign=center,
     fontupper=\small\sffamily\color{black!60}, before skip=4pt, after skip=4pt]
   #2\end{tcolorbox}}
+
+% Evidence PDF in an appendix, e.g.
+%   \evidence[section]{GRA01 risk assessment}{evidence/gra01.pdf}{note}
+% If the file exists: heading (#1 = section/subsection/chapter, default
+% section) and all pages of the PDF. If it is missing: in draft mode the
+% heading and a placeholder with the note; in final mode nothing at all,
+% only a warning in the log.
+\NewDocumentCommand\evidence{O{section} m m m O{0.85}}{%
+  \IfFileExists{#3}{%
+    \csname #1\endcsname{#2}%
+    \includepdf[pages=-, scale=#5, pagecommand={}]{#3}}{%
+    \iffinalmode
+      \PackageWarningNoLine{SEF639}{Evidence file #3 not found:
+        '#2' is left out of the final version}%
+    \else
+      \csname #1\endcsname{#2}%
+      \placeholder{#4\\[2pt] save it as \texttt{#3}}%
+    \fi}}
 
 % Objectives O1, O2 ... that can be referenced with \cref
 \newlist{objectives}{enumerate}{1}
@@ -490,6 +511,39 @@
 \newcommand\weightsum{\fpeval{round(\fyp@wsum,2)}%
   \ifdim\fpeval{abs(\fyp@wsum-1)}pt>0.001pt
     \ \textcolor{SolentRed}{(should be 1)}\fi}
+
+% Gantt charts (pgfgantt): \begin{ganttchart}[fyp]{1}{30} ... \end{ganttchart}
+%   \fypsemesters            the two title rows: Semester 1 (12 weeks),
+%                            break (3), Semester 2 (15 weeks) = 30 columns
+%   \ganttgroup{..}{a}{b}    a project stage (Proposal, Progress Report,
+%                            Final Report, Engineering Project Day)
+%   \ganttbar{..}{a}{b}      planned task (grey), with WBS number and hours
+%   \ganttbar[fyp actual]{}{a}{b}  actual duration (blue), same row
+%   \ganttmilestone{..}{a}   submission (red)
+\tikzset{
+  /pgfgantt/fyp/.style={
+    x unit=0.37cm, y unit chart=0.5cm, y unit title=0.5cm,
+    vgrid={*1{black!10, line width=0.3pt}}, hgrid={*1{black!10}},
+    title label font=\scriptsize, bar label font=\scriptsize,
+    group label font=\scriptsize\bfseries,
+    title/.style={fill=black!10, draw=black!40},
+    bar/.style={fill=black!40, draw=none}, bar height=0.32,
+    bar top shift=0.1,
+    group/.style={fill=Navy, draw=none}, group height=0.2,
+    group top shift=0.4, group left shift=0, group right shift=0,
+    group peaks height=0.12, group peaks tip position=0,
+    group peaks width=0.15,
+    milestone/.style={fill=SolentRed, draw=none},
+    milestone label font=\scriptsize\itshape,
+    today rule/.style={draw=SolentRed, thick, dashed},
+    today label font=\scriptsize\color{SolentRed}},
+  /pgfgantt/fyp actual/.style={bar/.style={fill=SkyBlue, draw=none},
+    bar top shift=0.5},
+}
+\newcommand\fypsemesters{%
+  \gantttitle{Semester 1 (weeks)}{12}\gantttitle{Break}{3}%
+  \gantttitle{Semester 2 (weeks)}{15}\\
+  \gantttitlelist{1,...,12}{1}\gantttitle{}{3}\gantttitlelist{1,...,15}{1}\\}
 
 % TikZ styles for flowcharts (methodology, system diagrams)
 \tikzset{

@@ -15,4 +15,5 @@ landscape page, use for example
 
 \IfFileExists{evidence/gantt.pdf}
   {\includepdf[pages=-, landscape, scale=0.9]{evidence/gantt.pdf}}
-  {\placeholder{Full Gantt chart: save it as \texttt{evidence/gantt.pdf}}}
+  {\iffinalmode\else
+     \placeholder{Full Gantt chart (optional): save it as \texttt{evidence/gantt.pdf}}\fi}

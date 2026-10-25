@@ -6,8 +6,11 @@ Demonstrates your project monitoring and control so far (Handbook, Phase
 Two): the detailed project plan as a Gantt chart with WBS numbers that match
 your logbook, a review of progress against the original plan with an
 analysis of any deviations, the risk analysis, the resource implications and
-the ethical considerations. A full-size chart can go in
-\cref{app:project-plan}.
+the ethical considerations. As a minimum, the Gantt chart shows a
+realistic duration (in hours) and phasing of each task, the tasks grouped by
+project stage (Proposal, Progress Report, Final Report, Engineering Project
+Day), and the actual progress compared with the original plan. A full-size
+chart can go in \cref{app:project-plan}.
 \end{guidance}
 
 \subsection{Project plan and progress}
@@ -18,37 +21,36 @@ the ethical considerations. A full-size chart can go in
 
 \begin{figure}[htbp]
   \centering
-  \begin{ganttchart}[
-      x unit=0.38cm, y unit chart=0.55cm, y unit title=0.55cm,
-      vgrid={*1{black!10, line width=0.3pt}}, hgrid,
-      title label font=\scriptsize, bar label font=\scriptsize,
-      title/.style={fill=black!10, draw=black!40},
-      bar/.style={fill=black!40, draw=none}, bar height=0.35,
-      bar top shift=0.1, bar label node/.append style={align=left},
-      milestone/.style={fill=SolentRed, draw=none},
-      milestone label font=\scriptsize\itshape,
-      today=12, today label=now, today label font=\scriptsize,
-      today rule/.style={draw=SolentRed, thick, dashed}
-    ]{1}{30}
-    \gantttitle{Semester 1 (weeks)}{12}
-    \gantttitle{Break}{3}
-    \gantttitle{Semester 2 (weeks)}{15}\\
-    \gantttitlelist{1,...,12}{1}
-    \gantttitle{}{3}
-    \gantttitlelist{1,...,15}{1}\\
-    \ganttbar{WBS 1 Proposal}{1}{2}
-      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{1}{3}\\[grid]
-    \ganttbar{WBS 2 Research \& specification}{3}{9}
-      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{3}{10}\\[grid]
-    \ganttbar{WBS 3 Concept design}{8}{12}
-      \ganttbar[bar/.style={fill=SkyBlue}, bar top shift=0.5]{}{9}{12}\\[grid]
+  \begin{ganttchart}[fyp, today=12, today label=now]{1}{30}
+    \fypsemesters
+    \ganttgroup{Proposal (45 h)}{1}{2}\\
+    \ganttbar{1.1 Problem, aims, objectives (20 h)}{1}{2}
+      \ganttbar[fyp actual]{}{1}{2}\\
+    \ganttbar{1.2 Proposal, H\&S, ethics (25 h)}{1}{2}
+      \ganttbar[fyp actual]{}{1}{3}\\
+    \ganttmilestone{Project proposal}{2}\\
+    \ganttgroup{Progress Report (155 h)}{3}{12}\\
+    \ganttbar{2.1 Literature and market (50 h)}{3}{8}
+      \ganttbar[fyp actual]{}{3}{9}\\
+    \ganttbar{2.2 Specification (25 h)}{6}{9}
+      \ganttbar[fyp actual]{}{7}{10}\\
+    \ganttbar{2.3 Concepts, options (40 h)}{8}{11}
+      \ganttbar[fyp actual]{}{9}{11}\\
+    \ganttbar{2.4 Write Progress Report (40 h)}{10}{12}
+      \ganttbar[fyp actual]{}{10}{12}\\
     \ganttmilestone{AE1 Progress Report}{12}\\
-    \ganttbar{WBS 4 Implementation}{16}{24}\\[grid]
-    \ganttbar{WBS 5 Testing}{22}{26}\\[grid]
-    \ganttbar{WBS 6 Final report}{24}{29}\\[grid]
-    \ganttmilestone{AE2 Final Report}{29}
+    \ganttgroup{Final Report (190 h)}{16}{27}\\
+    \ganttbar{3.1 Implementation (80 h)}{16}{22}\\
+    \ganttbar{3.2 Testing (40 h)}{21}{24}\\
+    \ganttbar{3.3 Evaluation (20 h)}{24}{25}\\
+    \ganttbar{3.4 Write Final Report (50 h)}{23}{27}\\
+    \ganttmilestone{AE2 Final Report}{27}\\
+    \ganttgroup{Engineering Project Day (10 h)}{28}{30}\\
+    \ganttbar{4.1 Poster and demonstration (10 h)}{28}{30}\\
+    \ganttmilestone{AE3 Engineering Project Day}{30}
   \end{ganttchart}
-  \caption{Project plan: original plan (grey) and actual progress (blue) at week 12 (example)}
+  \caption{Project plan with WBS numbers and planned hours, grouped by project
+    stage: original plan (grey) and actual progress (blue) at week 12 (example)}
   \label{fig:gantt}
 \end{figure}
 
