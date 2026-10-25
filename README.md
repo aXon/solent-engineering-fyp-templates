@@ -125,7 +125,8 @@ the title page and the poster show a placeholder.
   - plots straight from CSV data (pgfplots), code listings, SI units
     (siunitx), abbreviations and symbols (glossaries);
   - automatic inclusion of the DSE, GRA01 and ethics release PDFs from
-    `evidence/` (in final mode, a section whose file is missing is left out);
+    `evidence/`, with a warning if a required file (DSE, ethics release) is
+    missing in the final version;
   - on the poster: a QR code (for example to a demonstration video) and a
     warning when a column is too full.
 - `README-evidence.md`: a template for the README of the digital evidence
