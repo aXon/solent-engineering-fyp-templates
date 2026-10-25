@@ -1,0 +1,43 @@
+% =====================================================================
+%  setup/fyp-gantt.tex -- Gantt chart style (pgfgantt)
+%  Shared by the SEF639 templates and the SEF639 Project Handbook.
+%  Master copy: shared/setup/ in the template repository -- do not edit
+%  the copies; edit the master and run tools/sync-shared.sh.
+% =====================================================================
+\expandafter\chardef\csname fyp@atcode@fypgantt\endcsname=\catcode`\@
+\makeatletter
+\RequirePackage{pgfgantt}
+% Gantt charts (pgfgantt): \begin{ganttchart}[fyp]{1}{30} ... \end{ganttchart}
+%   \fypsemesters            the two title rows: Semester 1 (12 weeks),
+%                            break (3), Semester 2 (15 weeks) = 30 columns
+%   \ganttgroup{..}{a}{b}    a project stage (Proposal, Progress Report,
+%                            Final Report, Engineering Project Day)
+%   \ganttbar{..}{a}{b}      planned task (grey), with WBS number and hours
+%   \ganttbar[fyp actual]{}{a}{b}  actual duration (blue), same row
+%   \ganttmilestone{..}{a}   submission (red)
+\tikzset{
+  /pgfgantt/fyp/.style={
+    x unit=0.37cm, y unit chart=0.5cm, y unit title=0.5cm,
+    vgrid={*1{black!10, line width=0.3pt}}, hgrid={*1{black!10}},
+    title label font=\scriptsize, bar label font=\scriptsize,
+    group label font=\scriptsize\bfseries,
+    title/.style={fill=black!10, draw=black!40},
+    bar/.style={fill=black!40, draw=none}, bar height=0.32,
+    bar top shift=0.1,
+    group/.style={fill=Navy, draw=none}, group height=0.2,
+    group top shift=0.4, group left shift=0, group right shift=0,
+    group peaks height=0.12, group peaks tip position=0,
+    group peaks width=0.15,
+    milestone/.style={fill=SolentRed, draw=none},
+    milestone label font=\scriptsize\itshape,
+    today rule/.style={draw=SolentRed, thick, dashed},
+    today label font=\scriptsize\color{SolentRed}},
+  /pgfgantt/fyp actual/.style={bar/.style={fill=SkyBlue, draw=none},
+    bar top shift=0.5},
+}
+\newcommand\fypsemesters{%
+  \gantttitle{Semester 1 (weeks)}{12}\gantttitle{Break}{3}%
+  \gantttitle{Semester 2 (weeks)}{15}\\
+  \gantttitlelist{1,...,12}{1}\gantttitle{}{3}\gantttitlelist{1,...,15}{1}\\}
+
+\catcode`\@=\csname fyp@atcode@fypgantt\endcsname   % restore @ catcode

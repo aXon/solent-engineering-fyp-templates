@@ -38,20 +38,7 @@
 % ---------------------------------------------------------------------
 % Language and fonts (LuaLaTeX)
 % ---------------------------------------------------------------------
-% \fontstyle (set at the top of main.tex):
-%   brand   -- Carlito, a free font with the same metrics as Calibri, the
-%              system font of the Southampton Solent University brand
-%              guidelines (the brand fonts Bliss and Bilo are licensed)
-%   classic -- Latin Modern, the standard LaTeX look (serif)
-\providecommand\fontstyle{brand}
-\usepackage{fontspec}
-\edef\fyp@font{\fontstyle}\edef\fyp@brandstr{brand}
-\ifx\fyp@font\fyp@brandstr
-  \setmainfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
-    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
-  \setsansfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
-    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
-\fi
+\input{setup/fyp-brand}       % fonts and brand colours
 \usepackage{polyglossia}
 \setdefaultlanguage[variant=british]{english}
 \usepackage[autostyle]{csquotes}
@@ -66,31 +53,6 @@
 \usepackage{setspace}
 \setstretch{1.15}                % slightly more open than single spacing
 \fi
-
-% ---------------------------------------------------------------------
-% Colours: Southampton Solent University brand guidelines (v2.0, 2024)
-% Lead colours are Solent Red and white, with Navy for text and
-% headings. Tints: only 80%, 60% and 40% of a colour (e.g. SkyBlue!40);
-% any tint of black, but not below 10% (black!10) in print.
-% ---------------------------------------------------------------------
-\usepackage[table]{xcolor}
-\definecolor{SolentRed}{HTML}{CD1423}
-\definecolor{Navy}{HTML}{1D2136}
-\definecolor{SkyBlue}{HTML}{01C3DE}
-\definecolor{SeaBlue}{HTML}{0F435F}
-\definecolor{Teal}{HTML}{1F988A}
-\definecolor{PetrolBlue}{HTML}{083237}
-\definecolor{Orange}{HTML}{FF4D00}
-\definecolor{Yellow}{HTML}{FFC11B}
-\definecolor{Green}{HTML}{C6C745}
-\definecolor{Purple}{HTML}{9243F4}
-\definecolor{Pink}{HTML}{D82F89}
-\definecolor{Burgundy}{HTML}{531623}
-% risk ratings (risk register): 40% tints of brand colours
-\colorlet{RiskLow}{Green!40}
-\colorlet{RiskMedium}{Yellow!40}
-\colorlet{RiskHigh}{Orange!40}
-\colorlet{RiskVeryHigh}{SolentRed!40}
 
 % ---------------------------------------------------------------------
 % Figures, tables, lists, units, maths, code
@@ -154,54 +116,8 @@
     (\iffyp@maxmode maximum\else target\fi\ \fyp@target)}\fi
 \fi
 
-% ---------------------------------------------------------------------
-% References: Harvard Solent (Solent University's interpretation of
-% BS ISO 690), see https://libguides.solent.ac.uk/HarvardSolent
-% Same configuration as the SEF639 Project Handbook.
-% ---------------------------------------------------------------------
-\usepackage[
-  backend=biber,
-  style=ext-authoryear,
-  sorting=nyt,
-  maxbibnames=3, minbibnames=1,   % four or more authors -> et al.
-  maxcitenames=3, mincitenames=1,
-  giveninits=true,
-  uniquename=false, uniquelist=false,
-  dashed=false,
-  date=year,
-  urldate=long,
-  isbn=false, doi=false, eprint=false
-]{biblatex}
-
-% In-text: (Johns 2014) / Johns (2014); several sources separated by ';'
-\DeclareDelimFormat{nameyeardelim}{\addspace}
-\DeclareDelimFormat{finalnamedelim}{\addspace\bibstring{and}\space}
-\DeclareDelimFormat[bib]{finalnamedelim}{\addspace\bibstring{and}\space}
-\DeclareDelimFormat{multicitedelim}{\addsemicolon\space}
-% Reference list: JOHNS, R., 2014. \emph{Title}. 6th ed. London: Publisher
-\DeclareDelimFormat[bib]{nameyeardelim}{\addcomma\space}
-\DeclareFieldFormat{biblabeldate}{#1}
-\DeclareNameAlias{sortname}{family-given/given-family}
-\renewrobustcmd*{\bibinitdelim}{}
-\AtBeginBibliography{\renewcommand*{\mkbibnamefamily}[1]{\MakeUppercase{#1}}}
-\renewcommand*{\finentrypunct}{}
-\DeclareFieldFormat{editortype}{#1}
-% ... [viewed 8 October 2026]. Available from: URL
-\newcommand*{\solentmonth}[1]{\ifcase#1\or January\or February\or March\or
-  April\or May\or June\or July\or August\or September\or October\or
-  November\or December\fi}
-\DeclareFieldFormat{url}{Available from: \url{#1}}
-\renewbibmacro*{url+urldate}{%
-  \iffieldundef{url}{}{%
-    \iffieldundef{urlyear}{}{%
-      \setunit{\addspace}%
-      \printtext[brackets]{viewed\space\thefield{urlday}\space
-        \solentmonth{\thefield{urlmonth}}\space\thefield{urlyear}}}%
-    \setunit{\adddot\space}\printfield{url}}}
-% Split the list into 'References' (cited) and 'Bibliography' (consulted
-% but not cited -- add those with \nocite{key} in main.tex)
-\DeclareBibliographyCategory{cited}
-\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+% References: Harvard Solent
+\input{setup/fyp-harvard}
 
 % ---------------------------------------------------------------------
 % Cross-references and links
@@ -523,38 +439,8 @@
   \ifdim\fpeval{abs(\fyp@wsum-1)}pt>0.001pt
     \ \textcolor{SolentRed}{(should be 1)}\fi}
 
-% Gantt charts (pgfgantt): \begin{ganttchart}[fyp]{1}{30} ... \end{ganttchart}
-%   \fypsemesters            the two title rows: Semester 1 (12 weeks),
-%                            break (3), Semester 2 (15 weeks) = 30 columns
-%   \ganttgroup{..}{a}{b}    a project stage (Proposal, Progress Report,
-%                            Final Report, Engineering Project Day)
-%   \ganttbar{..}{a}{b}      planned task (grey), with WBS number and hours
-%   \ganttbar[fyp actual]{}{a}{b}  actual duration (blue), same row
-%   \ganttmilestone{..}{a}   submission (red)
-\tikzset{
-  /pgfgantt/fyp/.style={
-    x unit=0.37cm, y unit chart=0.5cm, y unit title=0.5cm,
-    vgrid={*1{black!10, line width=0.3pt}}, hgrid={*1{black!10}},
-    title label font=\scriptsize, bar label font=\scriptsize,
-    group label font=\scriptsize\bfseries,
-    title/.style={fill=black!10, draw=black!40},
-    bar/.style={fill=black!40, draw=none}, bar height=0.32,
-    bar top shift=0.1,
-    group/.style={fill=Navy, draw=none}, group height=0.2,
-    group top shift=0.4, group left shift=0, group right shift=0,
-    group peaks height=0.12, group peaks tip position=0,
-    group peaks width=0.15,
-    milestone/.style={fill=SolentRed, draw=none},
-    milestone label font=\scriptsize\itshape,
-    today rule/.style={draw=SolentRed, thick, dashed},
-    today label font=\scriptsize\color{SolentRed}},
-  /pgfgantt/fyp actual/.style={bar/.style={fill=SkyBlue, draw=none},
-    bar top shift=0.5},
-}
-\newcommand\fypsemesters{%
-  \gantttitle{Semester 1 (weeks)}{12}\gantttitle{Break}{3}%
-  \gantttitle{Semester 2 (weeks)}{15}\\
-  \gantttitlelist{1,...,12}{1}\gantttitle{}{3}\gantttitlelist{1,...,15}{1}\\}
+% Gantt charts
+\input{setup/fyp-gantt}
 
 % TikZ styles for flowcharts (methodology, system diagrams)
 \tikzset{

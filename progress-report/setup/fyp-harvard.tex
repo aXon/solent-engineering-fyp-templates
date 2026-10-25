@@ -1,0 +1,58 @@
+% =====================================================================
+%  setup/fyp-harvard.tex -- Harvard Solent referencing (biblatex, Biber)
+%  Shared by the SEF639 templates and the SEF639 Project Handbook.
+%  Master copy: shared/setup/ in the template repository -- do not edit
+%  the copies; edit the master and run tools/sync-shared.sh.
+% =====================================================================
+\expandafter\chardef\csname fyp@atcode@fypharvard\endcsname=\catcode`\@
+\makeatletter
+% ---------------------------------------------------------------------
+% References: Harvard Solent (Solent University's interpretation of
+% BS ISO 690), see https://libguides.solent.ac.uk/HarvardSolent
+% Used by the templates and the SEF639 Project Handbook.
+% ---------------------------------------------------------------------
+\usepackage[
+  backend=biber,
+  style=ext-authoryear,
+  sorting=nyt,
+  maxbibnames=3, minbibnames=1,   % four or more authors -> et al.
+  maxcitenames=3, mincitenames=1,
+  giveninits=true,
+  uniquename=false, uniquelist=false,
+  dashed=false,
+  date=year,
+  urldate=long,
+  isbn=false, doi=false, eprint=false
+]{biblatex}
+
+% In-text: (Johns 2014) / Johns (2014); several sources separated by ';'
+\DeclareDelimFormat{nameyeardelim}{\addspace}
+\DeclareDelimFormat{finalnamedelim}{\addspace\bibstring{and}\space}
+\DeclareDelimFormat[bib]{finalnamedelim}{\addspace\bibstring{and}\space}
+\DeclareDelimFormat{multicitedelim}{\addsemicolon\space}
+% Reference list: JOHNS, R., 2014. \emph{Title}. 6th ed. London: Publisher
+\DeclareDelimFormat[bib]{nameyeardelim}{\addcomma\space}
+\DeclareFieldFormat{biblabeldate}{#1}
+\DeclareNameAlias{sortname}{family-given/given-family}
+\renewrobustcmd*{\bibinitdelim}{}
+\AtBeginBibliography{\renewcommand*{\mkbibnamefamily}[1]{\MakeUppercase{#1}}}
+\renewcommand*{\finentrypunct}{}
+\DeclareFieldFormat{editortype}{#1}
+% ... [viewed 8 October 2026]. Available from: URL
+\newcommand*{\solentmonth}[1]{\ifcase#1\or January\or February\or March\or
+  April\or May\or June\or July\or August\or September\or October\or
+  November\or December\fi}
+\DeclareFieldFormat{url}{Available from: \url{#1}}
+\renewbibmacro*{url+urldate}{%
+  \iffieldundef{url}{}{%
+    \iffieldundef{urlyear}{}{%
+      \setunit{\addspace}%
+      \printtext[brackets]{viewed\space\thefield{urlday}\space
+        \solentmonth{\thefield{urlmonth}}\space\thefield{urlyear}}}%
+    \setunit{\adddot\space}\printfield{url}}}
+% Split the list into 'References' (cited) and 'Bibliography' (consulted
+% but not cited -- add those with \nocite{key} in main.tex)
+\DeclareBibliographyCategory{cited}
+\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+
+\catcode`\@=\csname fyp@atcode@fypharvard\endcsname   % restore @ catcode

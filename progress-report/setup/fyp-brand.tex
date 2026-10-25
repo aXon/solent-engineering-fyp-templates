@@ -1,0 +1,50 @@
+% =====================================================================
+%  setup/fyp-brand.tex -- fonts and brand colours
+%  Shared by the SEF639 templates and the SEF639 Project Handbook.
+%  Master copy: shared/setup/ in the template repository -- do not edit
+%  the copies; edit the master and run tools/sync-shared.sh.
+% =====================================================================
+\expandafter\chardef\csname fyp@atcode@fypbrand\endcsname=\catcode`\@
+\makeatletter
+% Fonts (LuaLaTeX).
+% \fontstyle (set at the top of main.tex):
+%   brand   -- Carlito, a free font with the same metrics as Calibri, the
+%              system font of the Southampton Solent University brand
+%              guidelines (the brand fonts Bliss and Bilo are licensed)
+%   classic -- Latin Modern, the standard LaTeX look (serif)
+\providecommand\fontstyle{brand}
+\usepackage{fontspec}
+\edef\fyp@font{\fontstyle}\edef\fyp@brandstr{brand}
+\ifx\fyp@font\fyp@brandstr
+  \setmainfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
+    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+  \setsansfont{Carlito}[Extension=.ttf, UprightFont=*-Regular,
+    BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+\fi
+
+% ---------------------------------------------------------------------
+% Colours: Southampton Solent University brand guidelines (v2.0, 2024)
+% Lead colours are Solent Red and white, with Navy for text and
+% headings. Tints: only 80%, 60% and 40% of a colour (e.g. SkyBlue!40);
+% any tint of black, but not below 10% (black!10) in print.
+% ---------------------------------------------------------------------
+\usepackage[table]{xcolor}
+\definecolor{SolentRed}{HTML}{CD1423}
+\definecolor{Navy}{HTML}{1D2136}
+\definecolor{SkyBlue}{HTML}{01C3DE}
+\definecolor{SeaBlue}{HTML}{0F435F}
+\definecolor{Teal}{HTML}{1F988A}
+\definecolor{PetrolBlue}{HTML}{083237}
+\definecolor{Orange}{HTML}{FF4D00}
+\definecolor{Yellow}{HTML}{FFC11B}
+\definecolor{Green}{HTML}{C6C745}
+\definecolor{Purple}{HTML}{9243F4}
+\definecolor{Pink}{HTML}{D82F89}
+\definecolor{Burgundy}{HTML}{531623}
+% risk ratings (risk register): 40% tints of brand colours
+\colorlet{RiskLow}{Green!40}
+\colorlet{RiskMedium}{Yellow!40}
+\colorlet{RiskHigh}{Orange!40}
+\colorlet{RiskVeryHigh}{SolentRed!40}
+
+\catcode`\@=\csname fyp@atcode@fypbrand\endcsname   % restore @ catcode
